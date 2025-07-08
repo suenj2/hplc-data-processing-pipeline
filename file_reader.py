@@ -10,7 +10,13 @@ df = pd.read_excel("input.xlsx", header=None)
 
 # print(df.head())
 
-print(df.iloc[:20, :10])
+# print(df.iloc[:20, :10])
+
+for i in range(10):
+    for j in range(10):
+        val = df.iloc[i, j]
+        if pd.notna(val):
+            print(f"[{i}:{j}] -> {repr(val)}")
 
 # xlsx format is fucked need to write a function with a for loop to find cell A1
 # Will also need a global var for these
