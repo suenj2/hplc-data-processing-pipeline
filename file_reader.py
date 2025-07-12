@@ -36,9 +36,5 @@ reader = FileReader("input.xlsx", sheet_name="PFAS Kitcholm soils 3,4")
 FileReader.read_file_meta_data(reader)
 # FileReader.list_exps(reader)
 
-
-
-
-
-# xlsx format is fucked need to write a function with a for loop to find cell A1
+# Need to converter from int to excel format (0, 0) -> "A1"
 # Will also need a global var for these
