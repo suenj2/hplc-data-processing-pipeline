@@ -25,21 +25,25 @@ class FileReader:
             cell = self.df.iloc[rows, 0]
             if isinstance(cell, str) and f"Compound {exp_num}" in cell:
                 print(f'Found "{cell}" at cell location: {CellCoordinateConverter.to_excel_coord(0, rows)}')
-                return (0, rows)
-        print(f"Experiment number {exp_num} not found")
+                return (rows, 0)
+        # print(f"Experiment number {exp_num} not found")
+        raise ValueError(f"Experiment number {exp_num} not found in data.")
 
-    # def exp_row_range(self):
-    #
-    #     return (row_min, row_max)
-
-    # def print_exp_raw(self, exp_num):
-    #
-    #     return False
+    def exp_row_range(self, exp_num):
+        (title_row , title_col) = self.exp_start_cell(exp_num)
+        row_min = title_row + 2
+        # print(row_min)
+        row_max = row_min + 1
+        while not pd.isna(self.df.iloc[row_max, 0]):
+            row_max += 1
+        return (row_min, row_max-1)
 
 reader = FileReader("input.xlsx", sheet_name="PFAS Kitcholm soils 3,4")
 FileReader.read_file_meta_data(reader)
 # FileReader.list_exps(reader)
 # FileReader.exp_start_cell(reader, 1)
-FileReader.exp_start_cell(reader, 133)
+# FileReader.exp_start_cell(reader, 133)
+# print(FileReader.exp_start_cell(reader, 1))
+# print(FileReader.exp_row_range(reader, 1)) #should be (7,54)
 
 # Will also need a global var for these
