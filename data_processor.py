@@ -1,5 +1,6 @@
 import file_reader
 import pandas as pd
+import numpy as np
 
 class DataProcessor:
     def __init__(self, df_chunk):
@@ -17,11 +18,9 @@ class DataProcessor:
     def pre_format(self):
         for rows in range(self.row_size):
             for cols in range(7, self.col_size):
-                # print(self.df.iloc[rows, cols])
-                self.df.iloc[rows, cols] = pd.NA
+                self.df.iloc[rows, cols] = np.nan
 
-        # self.df.iloc[self.rows+1, 8] = "LINEST"
-        # self.df.iloc[self.rows+2, 7] = "ratio"
-        # self.df.iloc[self.rows+2, 7] = "ratio"
+        self.df.iloc[0, 8] = "LINEST"
+        self.df.iloc[1, 7] = "ratio"
 
 

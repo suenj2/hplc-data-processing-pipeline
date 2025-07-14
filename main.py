@@ -28,6 +28,7 @@ if __name__ == '__main__':
     experiment_num = 3 #hardcoded for now
     df_chunk = reader.extract_df(experiment_num)
     processing_chunk = data_processor.DataProcessor(df_chunk) #convert to data_processor object
+    # print(processing_chunk)
 
     # Step 4: Processing of data frame
     processing_chunk.pre_format()
