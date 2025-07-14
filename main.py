@@ -4,7 +4,7 @@ import pandas as pd
 
 #Import classes
 import data_processor
-import file_reader
+import HPLC_file_loader
 
 def filename_output(str_input):
     return str_input + "_processed"
@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     # Step 2: Open and process .xlsx file in output folder
     sheet_name_input = "PFAS Kitcholm soils 3,4" #hardcoded for now
-    reader = file_reader.FileReader(f"output/{output_filename}.xlsx", sheet_name=f"{sheet_name_input}")
+    reader = HPLC_file_loader.HPLCFileLoader(f"output/{output_filename}.xlsx", sheet_name=f"{sheet_name_input}")
     reader.read_file_meta_data()
 
     # Step 3: Select the experiment number to process results

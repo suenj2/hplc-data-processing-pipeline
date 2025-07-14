@@ -1,4 +1,4 @@
-import file_reader
+import HPLC_file_loader
 import pandas as pd
 import numpy as np
 

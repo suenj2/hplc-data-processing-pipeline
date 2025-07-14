@@ -6,7 +6,7 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.width', 1000)
 
-class FileReader:
+class HPLCFileLoader:
     def __init__(self, file_path, sheet_name=None):
         self.df = pd.read_excel(file_path, sheet_name=sheet_name, header=None)
         self.num_rows, self.num_cols = self.df.shape
@@ -47,8 +47,8 @@ class FileReader:
 
 
 
-reader = FileReader("input/input.xlsx", sheet_name="PFAS Kitcholm soils 3,4")
-FileReader.read_file_meta_data(reader)
+# reader = HPLCFileLoader("input/input.xlsx", sheet_name="PFAS Kitcholm soils 3,4")
+# HPLCFileLoader.read_file_meta_data(reader)
 # FileReader.list_exps(reader)
 # FileReader.exp_start_cell(reader, 1)
 # FileReader.exp_start_cell(reader, 133)
