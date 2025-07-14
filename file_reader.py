@@ -34,8 +34,6 @@ class FileReader:
 
     def exp_row_range(self, exp_num):
         (title_row , title_col) = self.exp_start_cell(exp_num)
-        # row_min = title_row + 2
-        # row_max = row_min + 1
         row_min = title_row + 1
         row_max = row_min + 2
         while not pd.isna(self.df.iloc[row_max, 0]):
@@ -44,8 +42,9 @@ class FileReader:
 
     def extract_df(self, exp_num):
         (row_min, row_max) = self.exp_row_range(exp_num)
-        df_chunk_extracted = self.df.iloc[row_min:row_max, 0:14]
+        df_chunk_extracted = self.df.iloc[row_min:row_max+1, 0:14]
         return df_chunk_extracted
+
 
 reader = FileReader("input/input.xlsx", sheet_name="PFAS Kitcholm soils 3,4")
 FileReader.read_file_meta_data(reader)
