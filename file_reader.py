@@ -1,5 +1,4 @@
 import pandas as pd
-import copy
 
 from cell_coordinate_converter import CellCoordinateConverter
 
@@ -35,8 +34,10 @@ class FileReader:
 
     def exp_row_range(self, exp_num):
         (title_row , title_col) = self.exp_start_cell(exp_num)
-        row_min = title_row + 2
-        row_max = row_min + 1
+        # row_min = title_row + 2
+        # row_max = row_min + 1
+        row_min = title_row + 1
+        row_max = row_min + 2
         while not pd.isna(self.df.iloc[row_max, 0]):
             row_max += 1
         return (row_min, row_max-1)
