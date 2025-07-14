@@ -46,7 +46,18 @@ class DataProcessor:
 
     def ratio_calc(self):
         for row in range(2, self.row_size):
-            if pd.isna(self.df.iloc[row, 7]):
+            if not pd.isna(self.df.iloc[row, 4]):
                 result = float(self.df.iloc[row, 4])/float(self.df.iloc[row, 5]) #Area/IS Area
                 self.df.iloc[row, 7] = result
+
+    def conc_vial_calc(self):
+        return False
+
+    def corr_conc_calc(self):
+        return False
+
+    def conc_soil_calc(self):
+        return False
+
+
 
