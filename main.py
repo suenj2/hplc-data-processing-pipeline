@@ -1,21 +1,22 @@
 import file_reader
+import shutil
 
+def filename_output(str_input):
+    return str_input + "_processed"
 
+def file_copy(src, dst):
+    shutil.copy(src, dst)
+    print(f"File successfully copied from {src} to {dst}")
 
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    # Step 1: Make secure copy in output folder
+    input_filename = "input" #hardcoded for now
+    output_filename = filename_output(input_filename)
+    file_copy(f"input/{input_filename}.xlsx", f"output/{output_filename}.xlsx")
+
+    # Step 2: Open and process .xlsx file in output folder
+    sheetname = "PFAS Kitcholm soils 3,4" #hardcoded for now
+    reader = file_reader.FileReader(f"output/{output_filename}.xlsx", sheet_name=f"{sheetname}")
+    reader.read_file_meta_data()
 
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
