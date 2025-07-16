@@ -5,6 +5,7 @@ import numpy as np
 class DataProcessor:
     def __init__(self, df_chunk):
         self.df = df_chunk
+        self.exp_num, self.compound_name = self.find_exp_attributes()
         self.starting_coordinate = (df_chunk.index.min(), int(df_chunk.columns.min()))
         self.row_size, self.col_size = df_chunk.shape
         self.row_first_run = None
@@ -15,8 +16,12 @@ class DataProcessor:
 
         try:
             self.row_first_run = self.find_first_run()
+            print(f"Dataframe successfully loaded:")
+            print(f"Experiment: {self.exp_num}")
+            print(f"Compound: {self.compound_name}\n")
         except ValueError:
             print("Warning: no first run found.")
+
 
     def __str__(self):
         return f"DataProcessor holding DataFrame:\n{self.df}"
@@ -35,6 +40,28 @@ class DataProcessor:
                 print(f"First experiment was found at row {first_exp_row}")
                 return first_exp_row
         raise ValueError(f"First run not found")
+
+    def find_exp_attributes(self):
+        exp_title = self.df.iloc[0, 0]
+
+        #split by ":"
+        split_colon = exp_title.split(":", 1)
+        left = split_colon[0]
+        right = split_colon[1]
+
+        #extract experiment number from the left
+        exp_num = int(left.split(" ")[1])
+
+        #split right by space
+        right_parts = right.split()
+
+        #check for suffix number
+        if right_parts[-1].isdigit():
+            compound_name = " ".join(right_parts[:-1])
+        else:
+            compound_name = " ".join(right_parts)
+
+        return exp_num, compound_name
 
     # static????
     def append_std_conc(self, HPLC_file_path, conc_file_path, exp_num):
@@ -67,27 +94,6 @@ class DataProcessor:
 
     def conc_soil_calc(self):
         return False
-
-    def find_exp_attributes(str):
-        #split by ":"
-        split_colon = str.split(":", 1)
-        left = split_colon[0]
-        right = split_colon[1]
-
-        #extract experiment number from the left
-        exp_num = left.split(" ")[1]
-
-        #split right by space
-        right_parts = right.split()
-
-        #check for suffix number
-        if right_parts[-1].isdigit():
-            compound_name = " ".join(right_parts[:-1])
-        else:
-            compound_name = " ".join(right_parts)
-
-        return exp_num, compound_name
-
 
 # Test:
 # print(DataProcessor.find_exp_attributes("Compound 4:  PFEtS"))

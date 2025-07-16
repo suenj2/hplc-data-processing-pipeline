@@ -15,4 +15,4 @@ class SuperFileLoader:
         self.num_rows, self.num_cols = self.df.shape
 
     def read_file_meta_data(self):
-        print(f"File contains {self.num_rows} rows and {self.num_cols} columns.")
+        print(f"File contains {self.num_rows} rows and {self.num_cols} columns.\n")

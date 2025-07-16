@@ -35,4 +35,4 @@ if __name__ == '__main__':
     # Step 4: Processing of data frame
     processing_chunk.pre_format()
     processing_chunk.ratio_calc()
-    print(processing_chunk)
+    # print(processing_chunk)
