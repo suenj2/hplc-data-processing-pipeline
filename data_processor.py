@@ -10,10 +10,6 @@ class DataProcessor:
         self.row_size, self.col_size = df_chunk.shape
         self.row_first_run = None
 
-        # print(self.starting_coordinate)
-        # print(self.row_size)
-        # print(self.col_size)
-
         try:
             self.row_first_run = self.find_first_run()
             print(f"Dataframe successfully loaded:")
@@ -21,7 +17,6 @@ class DataProcessor:
             print(f"Compound: {self.compound_name}\n")
         except ValueError:
             print("Warning: no first run found.")
-
 
     def __str__(self):
         return f"DataProcessor holding DataFrame:\n{self.df}"

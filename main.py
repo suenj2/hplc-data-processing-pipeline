@@ -15,24 +15,26 @@ def file_copy(src, dst):
 
 if __name__ == '__main__':
     # Step 1: Make secure copy in output folder
-    input_filename = "input" #hardcoded for now
-    output_filename = filename_output(input_filename)
-    file_copy(f"input/{input_filename}.xlsx", f"output/{output_filename}.xlsx")
+    input_HPLC_filename = "input" #hardcoded for now
+    output_filename = filename_output(input_HPLC_filename)
+    file_copy(f"input/{input_HPLC_filename}.xlsx", f"output/{output_filename}.xlsx")
 
-    # Step 2: Open and process .xlsx file in output folder
+    # Step 2: Open and extract dataframe from HPLC file (.xlsx) in output folder
     sheet_name_input = "PFAS Kitcholm soils 3,4" #hardcoded for now
-    reader = HPLC_file_loader.HPLCFileLoader(f"output/{output_filename}.xlsx", sheet_name=f"{sheet_name_input}")
-    reader.read_file_meta_data()
-    # reader.list_exps()
+    HPLC_df = HPLC_file_loader.HPLCFileLoader(f"output/{output_filename}.xlsx", sheet_name=f"{sheet_name_input}")
+    HPLC_df.read_file_meta_data()
+    # HPLC_df.list_exps()
 
-    # Step 3: Select the experiment number to process results
-    experiment_num = 3 #hardcoded for now
-    #append corresponding concentrations
-    df_chunk = reader.extract_df(experiment_num)
-    processing_chunk = data_processor.DataProcessor(df_chunk) #convert to data_processor object
+    # Step 3: Open and extract dataframe from compound concentration file (.csv) in output folder
+
+    # Step 4: Select the experiment number to process results
+    # experiment_num = 3 #hardcoded for now
+    # append corresponding concentrations
+    # df_chunk = reader.extract_df(experiment_num)
+    # processing_chunk = data_processor.DataProcessor(df_chunk) #convert to data_processor object
     # print(processing_chunk)
 
-    # Step 4: Processing of data frame
-    processing_chunk.pre_format()
-    processing_chunk.ratio_calc()
+    # Step 5: Processing of data frame
+    # processing_chunk.pre_format()
+    # processing_chunk.ratio_calc()
     # print(processing_chunk)
