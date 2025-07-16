@@ -50,11 +50,11 @@ class DataProcessor:
             for cols in range(7, self.col_size):
                 self.df.iloc[rows, cols] = np.nan
 
-        self.df.iloc[0, 8] = "LINEST"
-        self.df.iloc[1, 7] = "ratio"
+        self.df.iloc[1, 8] = "LINEST"
+        self.df.iloc[2, 7] = "ratio"
 
     def ratio_calc(self):
-        for row in range(2, self.row_size):
+        for row in range(3, self.row_size):
             if not pd.isna(self.df.iloc[row, 4]):
                 result = float(self.df.iloc[row, 4])/float(self.df.iloc[row, 5]) #Area/IS Area
                 self.df.iloc[row, 7] = result
@@ -68,5 +68,31 @@ class DataProcessor:
     def conc_soil_calc(self):
         return False
 
+    def find_exp_attributes(str):
+        #split by ":"
+        split_colon = str.split(":", 1)
+        left = split_colon[0]
+        right = split_colon[1]
+
+        #extract experiment number from the left
+        exp_num = left.split(" ")[1]
+
+        #split right by space
+        right_parts = right.split()
+
+        #check for suffix number
+        if right_parts[-1].isdigit():
+            compound_name = " ".join(right_parts[:-1])
+        else:
+            compound_name = " ".join(right_parts)
+
+        return exp_num, compound_name
+
+
+# Test:
+# print(DataProcessor.find_exp_attributes("Compound 4:  PFEtS"))
+# print(DataProcessor.find_exp_attributes("Compound 4:  PFEtS 11"))
+# print(DataProcessor.find_exp_attributes("Compound 9:  3:3 FTCA 12"))
+# print(DataProcessor.find_exp_attributes("Compound 99: TFA 100"))
 
 
