@@ -1,6 +1,6 @@
 class CellCoordinateConverter:
-    @staticmethod
 
+    @staticmethod
     def int_to_excel_col(int):
         int += 1
         col_alpha = []

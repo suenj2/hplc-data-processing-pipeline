@@ -23,9 +23,11 @@ if __name__ == '__main__':
     sheet_name_input = "PFAS Kitcholm soils 3,4" #hardcoded for now
     reader = HPLC_file_loader.HPLCFileLoader(f"output/{output_filename}.xlsx", sheet_name=f"{sheet_name_input}")
     reader.read_file_meta_data()
+    reader.list_exps()
 
     # Step 3: Select the experiment number to process results
     experiment_num = 3 #hardcoded for now
+    #append corresponding concentrations
     df_chunk = reader.extract_df(experiment_num)
     processing_chunk = data_processor.DataProcessor(df_chunk) #convert to data_processor object
     # print(processing_chunk)

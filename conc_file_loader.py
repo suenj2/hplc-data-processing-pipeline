@@ -1,22 +1,18 @@
 import pandas as pd
 import os
 
+from super_file_loader import SuperFileLoader
+
 class ConcFileLoader:
     def __init__(self, file_path):
-        ext = os.path.splitext(file_path)[1].lower()
+        super().__init__(file_path)
 
-        if ext == ".csv":
-            self.df = pd.read_csv(file_path, header=None)
-        elif ext == (".xls", ".xlsx"):
-            self.df = pd.read_excel(file_path, sheet_name=None, header=None)
-        else:
-            raise ValueError(f"Unsupported file type: {ext}")
+    def extract_exp_df(self, exp_num):
+        # df_conc =
+        # df_chunk_extracted = self.df.iloc[row_min:row_max + 1, 0:14]
+        return False
+        # return df_chunk_extracted
 
-        self.num_rows, self.num_cols = self.df.shape
-
-    def read_file_meta_data(self):
-        print(f".xlsx file contains {self.num_rows} rows and {self.num_cols} columns.")
-
-reader = ConcFileLoader("input/concentration.csv")
-ConcFileLoader.read_file_meta_data(reader)
+# reader = ConcFileLoader("input/concentration.csv")
+# ConcFileLoader.read_file_meta_data(reader)
 

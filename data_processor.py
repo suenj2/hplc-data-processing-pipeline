@@ -36,6 +36,15 @@ class DataProcessor:
                 return first_exp_row
         raise ValueError(f"First run not found")
 
+    # static????
+    def append_std_conc(self, HPLC_file_path, conc_file_path, exp_num):
+        #splice concentrations from conc_file
+        col_offset = -1
+        # df_conc =
+        #append to output file
+
+        return False
+
     def pre_format(self):
         for rows in range(self.row_size):
             for cols in range(7, self.col_size):

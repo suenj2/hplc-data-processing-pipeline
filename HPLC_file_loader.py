@@ -1,18 +1,15 @@
 import pandas as pd
 
+from super_file_loader import SuperFileLoader
 from cell_coordinate_converter import CellCoordinateConverter
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.width', 1000)
 
-class HPLCFileLoader:
-    def __init__(self, file_path, sheet_name=None):
-        self.df = pd.read_excel(file_path, sheet_name=sheet_name, header=None)
-        self.num_rows, self.num_cols = self.df.shape
-
-    def read_file_meta_data(self):
-        print(f".xlsx file contains {self.num_rows} rows and {self.num_cols} columns.")
+class HPLCFileLoader(SuperFileLoader):
+    def __init__(self, file_path, sheet_name):
+        super().__init__(file_path, sheet_name=sheet_name)
 
     def copy_file(self):
         return False
