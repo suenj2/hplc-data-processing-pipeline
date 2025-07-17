@@ -88,8 +88,6 @@ class DataProcessor:
     def linest(self):
         x = np.array(self.df.iloc[6:11, 2].tolist(), dtype=float)
         y = np.array(self.df.iloc[6:11, 7].tolist(), dtype=float)
-        print(x)
-        print(y)
         n = len(x)
 
         # Regression analysis
@@ -133,18 +131,7 @@ class DataProcessor:
             columns=["Col1 (slope)", "Col2 (intercept)"]
         )
 
-        return linest_df.round(8)
-
-        # return np.array([
-        #     [slope, intercept],
-        #     [std_err, se_intercept],
-        #     [r_value ** 2, see],
-        #     [f_stat, df],
-        #     [ss_reg, ss_res]
-        # ])
-
-
-
+        return linest_df
 
     def conc_vial_calc(self):
         return False
