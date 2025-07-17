@@ -86,8 +86,10 @@ class DataProcessor:
                 self.df.iloc[row, 7] = result
 
     def linest(self):
-        x = np.array(self.df.iloc[6:10, 2].tolist(), dtype=float)
-        y = np.array(self.df.iloc[6:10, 7].tolist(), dtype=float)
+        x = np.array(self.df.iloc[6:11, 2].tolist(), dtype=float)
+        y = np.array(self.df.iloc[6:11, 7].tolist(), dtype=float)
+        print(x)
+        print(y)
         n = len(x)
 
         # Regression analysis
