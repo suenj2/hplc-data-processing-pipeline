@@ -3,8 +3,10 @@ import shutil
 import pandas as pd
 
 #Import classes
-import data_processor
 import HPLC_file_loader
+import conc_file_loader
+import conc_lib
+import data_processor
 
 def filename_output(str_input):
     return str_input + "_processed"
@@ -26,15 +28,23 @@ if __name__ == '__main__':
     # HPLC_df.list_exps()
 
     # Step 3: Open and extract dataframe from compound concentration file (.csv) in output folder
+    conc_file_name = "concentration"
+    conc_df = conc_file_loader.ConcFileLoader(f"input/{conc_file_name}.csv").df
+    # print(conc_df)
 
-    # Step 4: Select the experiment number to process results
+    # Step 4: Load concentration library
+    lib = conc_lib.ConcLib(conc_df)
+    concentration_dict = lib.load_dict()
+    # print(concentration_dict)
+
+    # Step 5: Select the experiment number to process results
     # experiment_num = 3 #hardcoded for now
     # append corresponding concentrations
     # df_chunk = reader.extract_df(experiment_num)
     # processing_chunk = data_processor.DataProcessor(df_chunk) #convert to data_processor object
     # print(processing_chunk)
 
-    # Step 5: Processing of data frame
+    # Step 6: Processing of data frame
     # processing_chunk.pre_format()
     # processing_chunk.ratio_calc()
     # print(processing_chunk)
