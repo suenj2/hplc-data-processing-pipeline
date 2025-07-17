@@ -58,14 +58,17 @@ class DataProcessor:
 
         return exp_num, compound_name
 
-    # static????
-    def append_std_conc(self, HPLC_file_path, conc_file_path, exp_num):
-        #splice concentrations from conc_file
-        col_offset = -1
-        # df_conc =
-        #append to output file
+    def append_std_conc(self, dict):
+        exp_num, compound_name = self.find_exp_attributes()
+        sub_conc_df = dict[compound_name]
 
-        return False
+        start_row, start_col = 3, 2  # your origin cell
+        end_row = start_row + sub_conc_df.shape[0]
+        end_col = start_col + sub_conc_df.shape[1]
+
+        self.df.iloc[start_row:end_row, start_col:end_col] = sub_conc_df.values
+
+        return self.df
 
     def pre_format(self):
         for rows in range(self.row_size):
