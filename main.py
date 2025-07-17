@@ -46,6 +46,7 @@ if __name__ == '__main__':
     # Step 6: Processing of data frame (append concentration)
     processing_df_chunk.append_std_conc(concentration_dict)
     print(processing_df_chunk)
+    print(processing_df_chunk.linest())
 
 
     # processing_chunk.pre_format()

@@ -1,6 +1,7 @@
 import HPLC_file_loader
 import pandas as pd
 import numpy as np
+import scipy.stats as stats
 
 class DataProcessor:
     def __init__(self, df_chunk):
@@ -83,6 +84,65 @@ class DataProcessor:
             if not pd.isna(self.df.iloc[row, 4]):
                 result = float(self.df.iloc[row, 4])/float(self.df.iloc[row, 5]) #Area/IS Area
                 self.df.iloc[row, 7] = result
+
+    def linest(self):
+        x = np.array(self.df.iloc[6:10, 2].tolist(), dtype=float)
+        y = np.array(self.df.iloc[6:10, 7].tolist(), dtype=float)
+        n = len(x)
+
+        # Regression analysis
+        slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+        y_predicted = slope * x + intercept
+        residuals = y - y_predicted
+
+        # Deg of freedom
+        deg_freedom = n - 2
+
+        # Sum of squares
+        ss_total = np.sum((y - np.mean(y)) ** 2)
+        ss_res = np.sum(residuals ** 2)
+        ss_reg = ss_total - ss_res
+
+        # SEE (Standard error of y estimate)
+        see = np.sqrt(ss_res / deg_freedom)
+
+        # Manual Std Error of Intercept
+        denominator = np.sum((x - np.mean(x)) ** 2)
+        se_intercept = (
+            see * np.sqrt(np.sum(x ** 2) / (n * denominator)) if denominator != 0 else np.nan
+        )
+
+        # F-statistic
+        ms_reg = ss_reg / 1
+        ms_res = ss_res / deg_freedom
+        f_stat = ms_reg / ms_res
+
+        # Create dataframe
+        output = np.array([
+            [slope, intercept],
+            [std_err, se_intercept],
+            [r_value ** 2, see],
+            [f_stat, deg_freedom],
+            [ss_reg, ss_res]
+        ])
+        linest_df = pd.DataFrame(
+            output,
+            index=["slope/intercept", "stderr", "R2/SEE", "F/df", "SSR/SSE"],
+            columns=["Col1 (slope)", "Col2 (intercept)"]
+        )
+
+        return linest_df.round(8)
+
+        # return np.array([
+        #     [slope, intercept],
+        #     [std_err, se_intercept],
+        #     [r_value ** 2, see],
+        #     [f_stat, df],
+        #     [ss_reg, ss_res]
+        # ])
+
+
+
 
     def conc_vial_calc(self):
         return False
