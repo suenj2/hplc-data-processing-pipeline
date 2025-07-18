@@ -155,7 +155,16 @@ class DataProcessor:
         self.df.iloc[10, 8] = mean
 
     def corr_conc_calc(self):
-        return False
+        self.df.iloc[11, 9] = "Corr. Conc.(ppb)"
+
+        background = self.df.iloc[10, 8]
+        if background <= 0:
+            background = 0
+
+        for row in range(self.row_first_run, self.row_size):
+            if not pd.isna(self.df.iloc[row, 8]):
+                conc = self.df.iloc[row, 8] - background
+                self.df.iloc[row, 9] = conc
 
     def conc_soil_calc(self):
         return False
