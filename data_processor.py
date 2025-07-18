@@ -63,7 +63,7 @@ class DataProcessor:
         exp_num, compound_name = self.find_exp_attributes()
         sub_conc_df = dict[compound_name]
 
-        start_row, start_col = 3, 2  # your origin cell
+        start_row, start_col = 3, 2  # origin cell for insertion
         end_row = start_row + sub_conc_df.shape[0]
         end_col = start_col + sub_conc_df.shape[1]
 
@@ -76,7 +76,6 @@ class DataProcessor:
             for cols in range(7, self.col_size):
                 self.df.iloc[rows, cols] = np.nan
 
-        self.df.iloc[1, 8] = "LINEST"
         self.df.iloc[2, 7] = "ratio"
 
     def ratio_calc(self):
@@ -130,6 +129,14 @@ class DataProcessor:
             index=["slope/intercept", "stderr", "R2/SEE", "F/df", "SSR/SSE"],
             columns=["Col1 (slope)", "Col2 (intercept)"]
         )
+
+        # Append to self data frame
+        self.df.iloc[1, 8] = "LINEST" #print title
+        start_row, start_col = 2, 8  # origin cell for insertion
+        end_row = start_row + linest_df.shape[0]
+        end_col = start_col + linest_df.shape[1]
+
+        self.df.iloc[start_row:end_row, start_col:end_col] = linest_df.values
 
         return linest_df
 

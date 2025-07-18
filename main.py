@@ -38,17 +38,16 @@ if __name__ == '__main__':
     # print(concentration_dict)
 
     # Step 5: Load HPLC data as a dataframe in the data_processor class.
-    experiment_num = 1 #hardcoded for now
+    experiment_num = 3 #hardcoded for now
     df_chunk = HPLC_df.extract_df(experiment_num)
     processing_df_chunk = data_processor.DataProcessor(df_chunk) #convert to data_processor object
     # print(processing_df_chunk)
 
     # Step 6: Processing of data frame (append concentration)
     processing_df_chunk.append_std_conc(concentration_dict)
+    processing_df_chunk.pre_format()
+    processing_df_chunk.ratio_calc()
+    processing_df_chunk.linest()
     print(processing_df_chunk)
-    print(processing_df_chunk.linest())
 
-
-    # processing_chunk.pre_format()
-    # processing_chunk.ratio_calc()
     # print(processing_chunk)
