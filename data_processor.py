@@ -141,7 +141,18 @@ class DataProcessor:
         return linest_df
 
     def conc_vial_calc(self):
-        return False
+        self.df.iloc[11, 8] = "Conc.In Vial (ppb)"
+        for row in range(self.row_first_run, self.row_size):
+            if not pd.isna(self.df.iloc[row, 7]):
+                ratio = self.df.iloc[row, 7]
+                slope = self.df.iloc[2, 8]
+                intercept = self.df.iloc[2, 9]
+                conc = (ratio - intercept) / slope
+                self.df.iloc[row, 8] = conc
+
+        self.df.iloc[9, 8] = "Background"
+        mean = self.df.iloc[self.row_first_run:self.row_first_run+3, 8].mean()
+        self.df.iloc[10, 8] = mean
 
     def corr_conc_calc(self):
         return False
