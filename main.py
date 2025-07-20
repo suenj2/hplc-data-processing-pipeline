@@ -50,6 +50,8 @@ if __name__ == '__main__':
     processing_df_chunk.linest()
     processing_df_chunk.conc_vial_calc()
     processing_df_chunk.corr_conc_calc()
+    processing_df_chunk.conc_soil_calc()
+    processing_df_chunk.average_calc()
     print(processing_df_chunk)
 
     # print(processing_chunk)

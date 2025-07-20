@@ -167,7 +167,35 @@ class DataProcessor:
                 self.df.iloc[row, 9] = conc
 
     def conc_soil_calc(self):
-        return False
+        self.df.iloc[11, 10] = "Conc. In soil (ng/g)"
+
+        for row in range(self.row_first_run, self.row_first_run+3):
+            if not pd.isna(self.df.iloc[row, 9]):
+                conc = self.df.iloc[row, 9] * 1.1
+                self.df.iloc[row, 10] = conc
+
+        # for row in range(self.row_first_run+3, self.row_size): #for loop range is correct calculations requires biosolid masses
+        #     if not pd.isna(self.df.iloc[row, 9]):
+        #         conc = self.df.iloc[row, 9] * 1.1
+        #         self.df.iloc[row, 10] = conc
+
+
+    def average_calc(self):
+        row_count = 0
+        sum = 0
+        for row in range(self.row_first_run, self.row_size):
+            if not pd.isna(self.df.iloc[row, 10]) and row_count <= 2:
+                sum += self.df.iloc[row, 10]
+                row_count += 1
+                print(sum)
+            if row_count == 3:
+                self.df.iloc[row-3, 11] = "Conc. In soil (ng/g)"
+                sum += self.df.iloc[row, 10]
+                print(sum)
+                self.df.iloc[row-2, 11] = sum/row_count
+                row_count = 0
+                sum = 0
+
 
 # Test:
 # print(DataProcessor.find_exp_attributes("Compound 4:  PFEtS"))
