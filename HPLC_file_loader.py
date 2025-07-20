@@ -39,7 +39,7 @@ class HPLCFileLoader(SuperFileLoader):
 
     def extract_df(self, exp_num):
         (row_min, row_max) = self.exp_row_range(exp_num)
-        df_chunk_extracted = self.df.iloc[row_min:row_max+1, 0:14]
+        df_chunk_extracted = self.df.iloc[row_min:row_max+1, 0:18]
         return df_chunk_extracted
 
 

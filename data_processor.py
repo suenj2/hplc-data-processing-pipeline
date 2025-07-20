@@ -71,6 +71,58 @@ class DataProcessor:
 
         return self.df
 
+    def append_biosolid_masses(self):
+        biosolid_dict = {
+            "SS1": 1.0846,
+            "SS2": 1.0726,
+            "SS3": 1.1534,
+
+            "K4-1A": 1.0267,
+            "K4-1B": 1.1481,
+            "K4-1C": 1.0402,
+
+            "K4-2A": 1.127,
+            "K4-2B": 1.1154,
+            "K4-2C": 1.1711,
+
+            "K4-4A": 1.0932,
+            "K4-4B": 1.15,
+            "K4-4C": 1.0482,
+
+            "K4-5A": 1.1054,
+            "K4-5B": 1.0463,
+            "K4-5C": 1.1155,
+
+            "K3-1A": 1.0874,
+            "K3-1B": 1.0898,
+            "K3-1C": 1.0536,
+
+            "K3-2A": 1.1218,
+            "K3-2B": 1.198,
+            "K3-2C": 1.1538,
+
+            "K3-3A": 1.1183,
+            "K3-3B": 1.1448,
+            "K3-3C": 1.0493,
+
+            "K3-4A": 1.0704,
+            "K3-4B": 1.1589,
+            "K3-4C": 1.0206,
+
+            "K3-6A": 1.1289,
+            "K3-6B": 1.195,
+            "K3-6C": 1.1716
+        }
+
+        self.df.iloc[1, 16] = "Biosolids Masses"
+        self.df.iloc[1, 17] = "(g)"
+
+        row = 3
+        for sample_id, mass in biosolid_dict.items():
+            self.df.iloc[row, 16] = sample_id
+            self.df.iloc[row, 17] = mass
+            row += 1
+
     def pre_format(self):
         for rows in range(self.row_size):
             for cols in range(7, self.col_size):
