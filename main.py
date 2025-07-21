@@ -97,6 +97,7 @@ if __name__ == '__main__':
     processing_df_chunk.corr_conc_calc()
     processing_df_chunk.conc_soil_calc()
     processing_df_chunk.average_calc()
+    processing_df_chunk.SD_calc()
     print(processing_df_chunk)
 
     # print(processing_chunk)

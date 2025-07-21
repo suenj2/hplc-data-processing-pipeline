@@ -203,15 +203,27 @@ class DataProcessor:
             if not pd.isna(self.df.iloc[row, 10]) and row_count <= 2:
                 total += self.df.iloc[row, 10]
                 row_count += 1
-                # print(total)
             if row_count == 3:
                 self.df.iloc[row-3, 11] = "Conc. In soil (ng/g)"
-                # total += self.df.iloc[row, 10]
-                print(total)
                 self.df.iloc[row-2, 11] = total/row_count
-                # print(f"{total}, {row_count}")
                 row_count = 0
                 total = 0
+
+    def SD_calc(self):
+        data = []
+        row_count = 0
+        for row in range(self.row_first_run, self.row_size):
+            if not pd.isna(self.df.iloc[row, 10]) and row_count <= 2:
+                data.append(self.df.iloc[row, 10])
+                row_count += 1
+            if row_count == 3:
+                self.df.iloc[row-3, 12] = "Stdev"
+                self.df.iloc[row-2, 12] = np.std(data, ddof=1)
+                row_count = 0
+                data = []
+
+    # def format_combined_col(self):
+    #     return False
 
 
 # Test:
