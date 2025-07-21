@@ -228,6 +228,10 @@ class DataProcessor:
                 self.df.iloc[row-1, 13] = "Combined"
                 self.df.iloc[row, 13] = f"{self.df.iloc[row, 10]:.1f} ± {self.df.iloc[row, 11]:.1f}"
 
+    def write_chunk_to_df(self, main_df):
+        start_row, start_col = self.starting_coordinate
+        main_df.iloc[start_row:start_row + self.row_size, start_col:start_col + self.col_size] = self.df.values
+
 # Test:
 # print(DataProcessor.find_exp_attributes("Compound 4:  PFEtS"))
 # print(DataProcessor.find_exp_attributes("Compound 4:  PFEtS 11"))
