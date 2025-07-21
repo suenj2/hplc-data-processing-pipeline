@@ -17,14 +17,14 @@ def file_copy(src, dst):
     shutil.copy(src, dst)
     print(f"File successfully copied from {src} to {dst}")
 
-if __name__ == '__main__':
+def run_single_compound(exp_num):
     # Step 1: Make secure copy in output folder
-    input_HPLC_filename = "input" #hardcoded for now
+    input_HPLC_filename = "input"  # hardcoded for now
     output_filename = filename_output(input_HPLC_filename)
     file_copy(f"input/{input_HPLC_filename}.xlsx", f"output/{output_filename}.xlsx")
 
     # Step 2: Open and extract dataframe from HPLC file (.xlsx) in output folder
-    sheet_name_input = "PFAS Kitcholm soils 3,4" #hardcoded for now
+    sheet_name_input = "PFAS Kitcholm soils 3,4"  # hardcoded for now
     HPLC_df = HPLC_file_loader.HPLCFileLoader(f"output/{output_filename}.xlsx", sheet_name=f"{sheet_name_input}")
     HPLC_df.read_file_meta_data()
     # HPLC_df.list_exps()
@@ -40,9 +40,9 @@ if __name__ == '__main__':
     # print(concentration_dict)
 
     # Step 5: Load HPLC data as a dataframe in the data_processor class.
-    experiment_num = 3 #hardcoded for now
+    experiment_num = exp_num  # hardcoded for now
     df_chunk = HPLC_df.extract_df(experiment_num)
-    processing_df_chunk = data_processor.DataProcessor(df_chunk) #convert to data_processor object
+    processing_df_chunk = data_processor.DataProcessor(df_chunk)  # convert to data_processor object
     # print(processing_df_chunk)
 
     # Step 6: Append Biosolids Mass to the top left of dataframe
@@ -86,13 +86,13 @@ if __name__ == '__main__':
         "K3-6A": 1.1289,
         "K3-6B": 1.195,
         "K3-6C": 1.1716
-    } #Hardcoded for now. Remains the same for entire HPLC run. Need format of user input
+    }  # Hardcoded for now. Remains the same for entire HPLC run. Need format of user input
     processing_df_chunk.set_biosolid_masses(biosolid_dict)
 
     # Step 7: Processing of data frame (append concentration)
     processing_df_chunk.pre_format()
     processing_df_chunk.append_std_conc(concentration_dict)
-    processing_df_chunk.append_biosolid_masses() #Hardcoded for now. Masses change depends on experiment
+    processing_df_chunk.append_biosolid_masses()  # Hardcoded for now. Masses change depends on experiment
     processing_df_chunk.ratio_calc()
     processing_df_chunk.linest()
     processing_df_chunk.conc_vial_calc()
@@ -104,4 +104,11 @@ if __name__ == '__main__':
     print(processing_df_chunk)
 
     # Step 8: Write to output file
-    file_writer.FileWriter.write_df_to_excel(processing_df_chunk.df, "output/input_processed.xlsx", "PFAS Kitcholm soils 3,4", processing_df_chunk.starting_coordinate[0], processing_df_chunk.starting_coordinate[1])
+    file_writer.FileWriter.write_df_to_excel(processing_df_chunk.df, "output/input_processed.xlsx",
+                                             "PFAS Kitcholm soils 3,4", processing_df_chunk.starting_coordinate[0],
+                                             processing_df_chunk.starting_coordinate[1])
+
+if __name__ == '__main__':
+    run_single_compound(3)
+    run_single_compound(4)
+    run_single_compound(5)
