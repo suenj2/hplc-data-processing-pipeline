@@ -192,27 +192,26 @@ class DataProcessor:
         biosolid_row = 3
         for row in range(self.row_first_run+3, self.row_size): #for loop range is correct calculations requires biosolid masses
             if not pd.isna(self.df.iloc[row, 9]) and (self.df.iloc[row, 1] ==  self.df.iloc[biosolid_row, 16]):
-            # if not pd.isna(self.df.iloc[row, 9]):
                 conc = (self.df.iloc[row, 9]/self.df.iloc[biosolid_row, 17]) * 1.1
                 self.df.iloc[row, 10] = conc
                 biosolid_row += 1
 
-
     def average_calc(self):
         row_count = 0
-        sum = 0
+        total = 0
         for row in range(self.row_first_run, self.row_size):
             if not pd.isna(self.df.iloc[row, 10]) and row_count <= 2:
-                sum += self.df.iloc[row, 10]
+                total += self.df.iloc[row, 10]
                 row_count += 1
-                print(sum)
+                # print(total)
             if row_count == 3:
                 self.df.iloc[row-3, 11] = "Conc. In soil (ng/g)"
-                sum += self.df.iloc[row, 10]
-                print(sum)
-                self.df.iloc[row-2, 11] = sum/row_count
+                # total += self.df.iloc[row, 10]
+                print(total)
+                self.df.iloc[row-2, 11] = total/row_count
+                # print(f"{total}, {row_count}")
                 row_count = 0
-                sum = 0
+                total = 0
 
 
 # Test:
