@@ -222,9 +222,11 @@ class DataProcessor:
                 row_count = 0
                 data = []
 
-    # def format_combined_col(self):
-    #     return False
-
+    def format_combined_col(self):
+        for row in range(self.row_first_run, self.row_size):
+            if pd.notna(self.df.iloc[row, 12]) and isinstance(self.df.iloc[row, 12], (int, float)):
+                self.df.iloc[row-1, 13] = "Combined"
+                self.df.iloc[row, 13] = f"{self.df.iloc[row, 10]:.1f} ± {self.df.iloc[row, 11]:.1f}"
 
 # Test:
 # print(DataProcessor.find_exp_attributes("Compound 4:  PFEtS"))
