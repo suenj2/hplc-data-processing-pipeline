@@ -60,15 +60,28 @@ class DataProcessor:
 
         return exp_num, compound_name
 
-    def append_std_conc(self, dict):
+    def append_std_conc_and_spike(self, dict):
         exp_num, compound_name = self.find_exp_attributes()
         sub_conc_df = dict[compound_name]
+        row_end_conc = 0
+
+        for row in range(sub_conc_df.shape[0]):
+            if not pd.isna(sub_conc_df.iloc[row, 0]):
+                row_end_conc += 1
+            else:
+                break
+
+        sub_df_concs = sub_conc_df.iloc[:row_end_conc, :]
+        spike_value = float(sub_conc_df.iloc[-1, 0])
 
         start_row, start_col = 3, 2  # origin cell for insertion
-        end_row = start_row + sub_conc_df.shape[0]
-        end_col = start_col + sub_conc_df.shape[1]
 
-        self.df.iloc[start_row:end_row, start_col:end_col] = sub_conc_df.values
+        end_row = start_row + sub_df_concs.shape[0]
+        end_col = start_col + sub_df_concs.shape[1]
+
+        self.df.iloc[start_row:end_row, start_col:end_col] = sub_df_concs.values
+        self.df.iloc[9, 9] = "Spike"
+        self.df.iloc[10, 9] = spike_value
 
         return self.df
 
