@@ -34,7 +34,6 @@ class HPLCFileLoader(SuperFileLoader):
             # extract experiment number from the left
             return int(left.split(" ")[1])
 
-
     def exp_start_cell(self, exp_num):
         for rows in range(self.num_rows):
             cell = self.df.iloc[rows, 0]
@@ -56,7 +55,6 @@ class HPLCFileLoader(SuperFileLoader):
         (row_min, row_max) = self.exp_row_range(exp_num)
         df_chunk_extracted = self.df.iloc[row_min:row_max+1, 0:18]
         return df_chunk_extracted
-
 
 
 # reader = HPLCFileLoader("input/input.xlsx", sheet_name="PFAS Kitcholm soils 3,4")
