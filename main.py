@@ -45,7 +45,7 @@ def run_single_compound():
     # print(concentration_dict)
 
     # Step 5: Load HPLC data as a dataframe in the data_processor class.
-    experiment_num = 3  # hardcoded for now
+    experiment_num = 1  # hardcoded for now
     df_chunk = HPLC_df.extract_df(experiment_num)
     processing_df_chunk = data_processor.DataProcessor(df_chunk)  # convert to data_processor object
     # print(processing_df_chunk)
@@ -97,15 +97,16 @@ def run_single_compound():
     # Step 7: Processing of data frame (append concentration)
     processing_df_chunk.pre_format()
     processing_df_chunk.append_std_conc_and_spike(concentration_dict)
-    # processing_df_chunk.append_biosolid_masses()  # Hardcoded for now. Masses change depends on experiment
-    # processing_df_chunk.ratio_calc()
-    # processing_df_chunk.linest()
-    # processing_df_chunk.conc_vial_calc()
-    # processing_df_chunk.corr_conc_calc()
-    # processing_df_chunk.conc_soil_calc()
-    # processing_df_chunk.average_calc()
-    # processing_df_chunk.SD_calc()
-    # processing_df_chunk.format_combined_col()
+    processing_df_chunk.append_biosolid_masses()  # Hardcoded for now. Masses change depends on experiment
+    processing_df_chunk.ratio_calc()
+    processing_df_chunk.linest()
+    processing_df_chunk.conc_vial_calc()
+    processing_df_chunk.corr_conc_calc()
+    processing_df_chunk.conc_soil_calc()
+    processing_df_chunk.average_calc()
+    processing_df_chunk.SD_calc()
+    processing_df_chunk.format_combined_col()
+    processing_df_chunk.perc_recovery_uncertainty_combined()
     print(processing_df_chunk)
 
     # Step 8: Append to HPLC_df

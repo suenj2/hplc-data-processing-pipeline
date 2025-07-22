@@ -1,3 +1,5 @@
+from scipy.sparse.linalg import spilu
+
 import HPLC_file_loader
 import pandas as pd
 import numpy as np
@@ -89,7 +91,6 @@ class DataProcessor:
         self.biosolid_masses_dict = biosolid_dict
 
     def append_biosolid_masses(self):
-
         self.df.iloc[1, 16] = "Biosolids Masses"
         self.df.iloc[1, 17] = "(g)"
 
@@ -217,7 +218,7 @@ class DataProcessor:
                 total += self.df.iloc[row, 10]
                 row_count += 1
             if row_count == 3:
-                self.df.iloc[row-3, 11] = "Conc. In soil (ng/g)"
+                self.df.iloc[row-3, 11] = "Average"
                 self.df.iloc[row-2, 11] = total/row_count
                 row_count = 0
                 total = 0
@@ -240,6 +241,23 @@ class DataProcessor:
             if pd.notna(self.df.iloc[row, 12]) and isinstance(self.df.iloc[row, 12], (int, float)):
                 self.df.iloc[row-1, 13] = "Combined"
                 self.df.iloc[row, 13] = f"{self.df.iloc[row, 10]:.1f} ± {self.df.iloc[row, 11]:.1f}"
+
+    def perc_recovery_uncertainty_combined(self):
+        self.df.iloc[15, 13] = "%Recovery"
+        self.df.iloc[15, 14] = "Uncertainty"
+        self.df.iloc[15, 15] = "Combined"
+
+        average = self.df.iloc[16 ,11]
+        stdev = self.df.iloc[16 ,12]
+        spike = self.df.iloc[10, 9]
+
+        if spike and spike != 0:
+            self.df.iloc[16, 13] = (average / spike) * 100
+            self.df.iloc[16, 14] = (stdev / spike) * 100
+            self.df.iloc[16, 15] = f"{self.df.iloc[16, 13]:.1f} ± {self.df.iloc[16, 14]:.1f}"
+        else:
+            self.df.iloc[16, 13] = "DIV/0"
+            self.df.iloc[16, 14] = "DIV/0"
 
     def write_chunk_to_df(self, main_df):
         start_row, start_col = self.starting_coordinate
