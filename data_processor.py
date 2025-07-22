@@ -171,13 +171,16 @@ class DataProcessor:
 
     def conc_vial_calc(self):
         self.df.iloc[11, 8] = "Conc.In Vial (ppb)"
+        slope = self.df.iloc[2, 8]
+        intercept = self.df.iloc[2, 9]
+
+        if pd.isna(slope) or slope == 0:
+            raise ZeroDivisionError("Slope is zero or NaN in conc_vial_calc")
+
         for row in range(self.row_first_run, self.row_size):
-            if not pd.isna(self.df.iloc[row, 7]):
-                ratio = self.df.iloc[row, 7]
-                slope = self.df.iloc[2, 8]
-                intercept = self.df.iloc[2, 9]
-                conc = (ratio - intercept) / slope
-                self.df.iloc[row, 8] = conc
+            ratio = self.df.iloc[row, 7]
+            if pd.notna(ratio):
+                self.df.iloc[row, 8] = (ratio - intercept) / slope
 
         self.df.iloc[9, 8] = "Background"
         mean = self.df.iloc[self.row_first_run:self.row_first_run+3, 8].mean()
