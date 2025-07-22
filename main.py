@@ -107,6 +107,7 @@ def run_single_compound():
     processing_df_chunk.SD_calc()
     processing_df_chunk.format_combined_col()
     processing_df_chunk.perc_recovery_uncertainty_combined()
+    processing_df_chunk.LOD_LOQ_calc()
     print(processing_df_chunk)
 
     # Step 8: Append to HPLC_df

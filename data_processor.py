@@ -262,6 +262,38 @@ class DataProcessor:
             self.df.iloc[16, 13] = "DIV/0"
             self.df.iloc[16, 14] = "DIV/0"
 
+    def LOD_LOQ_calc(self):
+        LOD = 0
+        LOQ = 0
+
+        if self.df.iloc[6, 6] > 3:
+            LOD = self.df.iloc[6, 2]
+        elif self.df.iloc[7, 6] > 3:
+            LOD = self.df.iloc[7, 2]
+        elif self.df.iloc[8, 6] > 3:
+            LOD = self.df.iloc[8, 2]
+        elif self.df.iloc[9, 6] > 3:
+            LOD = self.df.iloc[9, 2]
+        else:
+            LOD = self.df.iloc[10, 2]
+
+        if self.df.iloc[6, 6] > 10:
+            LOQ = self.df.iloc[6, 2]
+        elif self.df.iloc[7, 6] > 10:
+            LOQ = self.df.iloc[7, 2]
+        elif self.df.iloc[8, 6] > 10:
+            LOQ = self.df.iloc[8, 2]
+        elif self.df.iloc[9, 6] > 10:
+            LOQ = self.df.iloc[9, 2]
+        else:
+            LOQ = self.df.iloc[10, 2]
+
+        self.df.iloc[2, 11] = "By S/N Ratio"
+        self.df.iloc[3, 10] = "LOD"
+        self.df.iloc[4, 10] = "LOQ"
+        self.df.iloc[3, 11] = LOD
+        self.df.iloc[4, 11] = LOQ
+
     def write_chunk_to_df(self, main_df):
         start_row, start_col = self.starting_coordinate
         main_df.iloc[start_row:start_row + self.row_size, start_col:start_col + self.col_size] = self.df.values
