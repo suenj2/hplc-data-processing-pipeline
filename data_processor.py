@@ -25,6 +25,24 @@ class DataProcessor:
     def __str__(self):
         return f"DataProcessor holding DataFrame:\n{self.df}"
 
+    def process_all_steps(self, concentration_dict):
+        self.pre_format()
+        self.append_std_conc_and_spike(concentration_dict)
+        self.append_biosolid_masses()
+        self.ratio_calc()
+        self.linest()
+        self.conc_vial_calc()
+        self.corr_conc_calc()
+        self.conc_soil_calc()
+        self.average_calc()
+        self.SD_calc()
+        self.format_combined_col()
+        self.perc_recovery_uncertainty_combined()
+        self.LOD_LOQ_calc()
+
+    def is_exp(self):
+        return pd.notna(self.df.iloc[3, 3])
+
     def find_first_run(self): #returns the row of the first non-calibration run
         sample_text_col = 1
         first_exp_row = 0

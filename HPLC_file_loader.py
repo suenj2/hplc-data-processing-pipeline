@@ -20,6 +20,21 @@ class HPLCFileLoader(SuperFileLoader):
             if isinstance(cell, str) and "Compound" in cell:
                 print(cell)
 
+    def get_last_exp(self):
+        col_values = self.df.iloc[:, 0]
+        mask = col_values.apply(lambda x: isinstance(x, str) and "Compound" in x)
+        filtered = col_values[mask]
+        if not filtered.empty:
+            exp_title = filtered.iloc[-1]
+
+            # split by ":"
+            split_colon = exp_title.split(":", 1)
+            left = split_colon[0]
+
+            # extract experiment number from the left
+            return int(left.split(" ")[1])
+
+
     def exp_start_cell(self, exp_num):
         for rows in range(self.num_rows):
             cell = self.df.iloc[rows, 0]
