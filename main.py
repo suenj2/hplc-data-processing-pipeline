@@ -177,8 +177,7 @@ def run_all_compounds():
     # Step 6: For loop that loads and processes individual experiments
     # Step 6a: Load HPLC data as a dataframe in the data_processor class.
     # Step 6b: Process dataframe of specific compound.
-    # Step 6b: Add dataframe to main HPLC_df dataframe.
-
+    # Step 6c: Add dataframe to main HPLC_df dataframe.
     for exps in range(1, last_exp_num):
         df_chunk = HPLC_df.extract_df(exps)
         processing_df_chunk = data_processor.DataProcessor(df_chunk)  # convert to data_processor object

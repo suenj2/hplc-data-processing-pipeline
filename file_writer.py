@@ -1,6 +1,5 @@
 import pandas as pd
 
-
 class FileWriter:
     @staticmethod
     def write_df_to_excel(df, filepath, sheet_name, start_row, start_col):
