@@ -8,6 +8,7 @@ import conc_file_loader
 import conc_lib
 import data_processor
 import file_writer
+from summary_report import SummaryReport
 
 #Pandas settings
 pd.set_option('display.max_rows', None)
@@ -174,10 +175,14 @@ def run_all_compounds():
         "K3-6C": 1.1716
     } #Hard coded. User to input this per sheet
 
-    # Step 6: For loop that loads and processes individual experiments
-    # Step 6a: Load HPLC data as a dataframe in the data_processor class.
-    # Step 6b: Process dataframe of specific compound.
-    # Step 6c: Add dataframe to main HPLC_df dataframe.
+    # Step 6: Create summary dataframe
+    default_sample_list = ["Analytes", "K4-1", "K4-2", "K4-4", "K4-5", "K3-1", "K3-2", "K3-3", "K3-4", "K3-6"] ##Hard coded. User to input this. Else loop for this default
+    summary_df = SummaryReport(default_sample_list)
+
+    # Step 7: For loop that loads and processes individual experiments
+    # Step 7a: Load HPLC data as a dataframe in the data_processor class.
+    # Step 7b: Process dataframe of specific compound.
+    # Step 7c: Add dataframe to main HPLC_df dataframe.
     for exps in range(1, last_exp_num):
         df_chunk = HPLC_df.extract_df(exps)
         processing_df_chunk = data_processor.DataProcessor(df_chunk)  # convert to data_processor object
@@ -192,7 +197,7 @@ def run_all_compounds():
                 import traceback
                 traceback.print_exc()
 
-    # Step 7: Write to .xlsx file
+    # Step 8: Write to .xlsx file
     file_writer.FileWriter.write_df_to_excel(HPLC_df.df, "output/input_processed.xlsx", "PFAS Kitcholm soils 3,4", 0, 0)
 
 if __name__ == '__main__':
