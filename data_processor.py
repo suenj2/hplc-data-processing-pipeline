@@ -231,37 +231,108 @@ class DataProcessor:
                 self.df.iloc[row, 10] = conc
                 biosolid_row += 1
 
+    # def average_calc(self):
+    #     row_count = 0
+    #     total = 0
+    #     for row in range(self.row_first_run, self.row_size):
+    #         if not pd.isna(self.df.iloc[row, 10]) and row_count <= 2:
+    #             total += self.df.iloc[row, 10]
+    #             row_count += 1
+    #         if row_count == 3:
+    #             self.df.iloc[row-3, 11] = "Average"
+    #             self.df.iloc[row-2, 11] = total/row_count
+    #             row_count = 0
+    #             total = 0
+    #
+    # def SD_calc(self):
+    #     data = []
+    #     row_count = 0
+    #     for row in range(self.row_first_run, self.row_size):
+    #         if not pd.isna(self.df.iloc[row, 10]) and row_count <= 2:
+    #             data.append(self.df.iloc[row, 10])
+    #             row_count += 1
+    #         if row_count == 3:
+    #             self.df.iloc[row-3, 12] = "Stdev"
+    #             self.df.iloc[row-2, 12] = np.std(data, ddof=1)
+    #             row_count = 0
+    #             data = []
+    #
+    # def format_combined_col(self):
+    #     for row in range(self.row_first_run, self.row_size):
+    #         if pd.notna(self.df.iloc[row, 12]) and isinstance(self.df.iloc[row, 12], (int, float)):
+    #             self.df.iloc[row-1, 13] = "Combined"
+    #             self.df.iloc[row, 13] = f"{self.df.iloc[row, 10]:.1f} ± {self.df.iloc[row, 11]:.1f}"
+
+    def _is_triplet(self, r, sample_col):
+        """Return base name if rows r..r+2 are exactly baseA/baseB/baseC."""
+        try:
+            a = self.df.iloc[r, sample_col]
+            b = self.df.iloc[r + 1, sample_col]
+            c = self.df.iloc[r + 2, sample_col]
+        except IndexError:
+            return None
+        if not (isinstance(a, str) and isinstance(b, str) and isinstance(c, str)):
+            return None
+        if not (a.endswith("A") and b.endswith("B") and c.endswith("C")):
+            return None
+        base = a[:-1]
+        if b[:-1] != base or c[:-1] != base:
+            return None
+        return base
+
     def average_calc(self):
-        row_count = 0
-        total = 0
-        for row in range(self.row_first_run, self.row_size):
-            if not pd.isna(self.df.iloc[row, 10]) and row_count <= 2:
-                total += self.df.iloc[row, 10]
-                row_count += 1
-            if row_count == 3:
-                self.df.iloc[row-3, 11] = "Average"
-                self.df.iloc[row-2, 11] = total/row_count
-                row_count = 0
-                total = 0
+        sample_col = 1
+        conc_col = 10
+        avg_col = 11
+
+        r = self.row_first_run
+        while r < self.row_size:
+            base = self._is_triplet(r, sample_col) if hasattr(self, "_is_triplet") else self._is_triplet(self, r, sample_col)
+            if base:
+                vals = self.df.iloc[r:r + 3, conc_col].astype(float)
+                if vals.notna().all():
+                    # headers one row above A row; value on A row
+                    self.df.iloc[r - 1, avg_col] = "Average"
+                    self.df.iloc[r, avg_col] = float(vals.mean())
+                r += 3  # jump to next block
+            else:
+                r += 1
 
     def SD_calc(self):
-        data = []
-        row_count = 0
-        for row in range(self.row_first_run, self.row_size):
-            if not pd.isna(self.df.iloc[row, 10]) and row_count <= 2:
-                data.append(self.df.iloc[row, 10])
-                row_count += 1
-            if row_count == 3:
-                self.df.iloc[row-3, 12] = "Stdev"
-                self.df.iloc[row-2, 12] = np.std(data, ddof=1)
-                row_count = 0
-                data = []
+        sample_col = 1
+        conc_col = 10
+        sd_col = 12
+
+        r = self.row_first_run
+        while r < self.row_size:
+            base = self._is_triplet(r, sample_col) if hasattr(self, "_is_triplet") else self._is_triplet(self, r, sample_col)
+            if base:
+                vals = self.df.iloc[r:r + 3, conc_col].astype(float)
+                if vals.notna().all():
+                    self.df.iloc[r - 1, sd_col] = "Stdev"
+                    self.df.iloc[r, sd_col] = float(vals.std(ddof=1))
+                r += 3
+            else:
+                r += 1
 
     def format_combined_col(self):
-        for row in range(self.row_first_run, self.row_size):
-            if pd.notna(self.df.iloc[row, 12]) and isinstance(self.df.iloc[row, 12], (int, float)):
-                self.df.iloc[row-1, 13] = "Combined"
-                self.df.iloc[row, 13] = f"{self.df.iloc[row, 10]:.1f} ± {self.df.iloc[row, 11]:.1f}"
+        sample_col = 1
+        avg_col = 11
+        sd_col = 12
+        comb_col = 13
+
+        r = self.row_first_run
+        while r < self.row_size:
+            base = self._is_triplet(r, sample_col) if hasattr(self, "_is_triplet") else self._is_triplet(self, r, sample_col)
+            if base:
+                avg = self.df.iloc[r, avg_col]
+                sd = self.df.iloc[r, sd_col]
+                if pd.notna(avg) and pd.notna(sd):
+                    self.df.iloc[r - 1, comb_col] = "Combined"
+                    self.df.iloc[r, comb_col] = f"{float(avg):.1f} ± {float(sd):.1f}"
+                r += 3
+            else:
+                r += 1
 
     def perc_recovery_uncertainty_combined(self):
         self.df.iloc[15, 13] = "%Recovery"

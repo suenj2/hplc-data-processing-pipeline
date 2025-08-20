@@ -3,6 +3,7 @@ import shutil
 import pandas as pd
 
 #Import classes
+# import os
 import HPLC_file_loader
 import conc_file_loader
 import conc_lib
@@ -199,8 +200,13 @@ def run_all_compounds():
                 import traceback
                 traceback.print_exc()
 
-    # Step 8: Write to .xlsx file
+    # Step 8: Write HPLC_df.df dataframe to .xlsx file
     file_writer.FileWriter.write_df_to_excel(HPLC_df.df, "output/input_processed.xlsx", "PFAS Kitcholm soils 3,4", 0, 0)
+
+    # Step 9: Write summary dataframe to .csv file
+    summary_df_pd_format = summary_df.to_dataframe()
+    # os.makedirs("output", exist_ok=True)
+    file_writer.FileWriter.write_df_to_excel(summary_df_pd_format, "output/summary.xlsx", "Summary", 0, 0)
 
 if __name__ == '__main__':
     # run_single_compound(3)

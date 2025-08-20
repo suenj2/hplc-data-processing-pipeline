@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 class SummaryReport:
     def __init__(self, sample_list):
@@ -37,5 +38,7 @@ class SummaryReport:
                 row_extracted_data.append(np.nan)  # placeholder to keep dimensions square
         # print(row_extracted_data)
         self.summary_dynamic_list.append(row_extracted_data)
-        print(self.summary_dynamic_list)
+        # print(self.summary_dynamic_list)
 
+    def to_dataframe(self):
+        return pd.DataFrame(self.summary_dynamic_list)
