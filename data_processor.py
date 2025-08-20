@@ -263,7 +263,7 @@ class DataProcessor:
     #             self.df.iloc[row-1, 13] = "Combined"
     #             self.df.iloc[row, 13] = f"{self.df.iloc[row, 10]:.1f} ± {self.df.iloc[row, 11]:.1f}"
 
-    def _is_triplet(self, r, sample_col):
+    def _get_triplet_base(self, r, sample_col):
         """Return base name if rows r..r+2 are exactly baseA/baseB/baseC."""
         try:
             a = self.df.iloc[r, sample_col]
@@ -287,7 +287,7 @@ class DataProcessor:
 
         r = self.row_first_run
         while r < self.row_size:
-            base = self._is_triplet(r, sample_col) if hasattr(self, "_is_triplet") else self._is_triplet(self, r, sample_col)
+            base = self._get_triplet_base(r, sample_col) if hasattr(self, "_is_triplet") else self._get_triplet_base(self, r, sample_col)
             if base:
                 vals = self.df.iloc[r:r + 3, conc_col].astype(float)
                 if vals.notna().all():
@@ -305,7 +305,7 @@ class DataProcessor:
 
         r = self.row_first_run
         while r < self.row_size:
-            base = self._is_triplet(r, sample_col) if hasattr(self, "_is_triplet") else self._is_triplet(self, r, sample_col)
+            base = self._get_triplet_base(r, sample_col) if hasattr(self, "_is_triplet") else self._get_triplet_base(self, r, sample_col)
             if base:
                 vals = self.df.iloc[r:r + 3, conc_col].astype(float)
                 if vals.notna().all():
@@ -323,7 +323,7 @@ class DataProcessor:
 
         r = self.row_first_run
         while r < self.row_size:
-            base = self._is_triplet(r, sample_col) if hasattr(self, "_is_triplet") else self._is_triplet(self, r, sample_col)
+            base = self._get_triplet_base(r, sample_col) if hasattr(self, "_is_triplet") else self._get_triplet_base(self, r, sample_col)
             if base:
                 avg = self.df.iloc[r, avg_col]
                 sd = self.df.iloc[r, sd_col]
