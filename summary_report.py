@@ -9,18 +9,6 @@ class SummaryReport:
         self.summary_dynamic_list.append(self.sample_list)
 
     def summary_extraction(self, processed_dataframe):
-        #Need for loop to iterate over the titles checking for prefix and suffix
-        #When the conditional is met, look to the right and extract summary data
-        row_extracted_data = []
-        # sample_text_col = 1
-        # calcculated_avg_col = 13
-        # for analyte in self.sample_list:
-        #     for row in range(processed_dataframe.row_size):
-        #         cell_value = processed_dataframe.df.iloc[row, sample_text_col]
-        #         if isinstance(cell_value, str) and cell_value.startswith(analyte) and cell_value.endswith("A"):
-        #             extracted_average = processed_dataframe.df.iloc[row, calcculated_avg_col]
-        #             print(f"{analyte}: {extracted_average}")
-
         exp_label = processed_dataframe.find_exp_attributes()[1]
         row_extracted_data = [exp_label] #initialize list and append label
         sample_text_col = 1
