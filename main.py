@@ -178,6 +178,7 @@ def run_all_compounds():
     # Step 6: Create summary dataframe
     default_sample_list = ["Analytes", "K4-1", "K4-2", "K4-4", "K4-5", "K3-1", "K3-2", "K3-3", "K3-4", "K3-6"] ##Hard coded. User to input this. Else loop for this default
     summary_df = SummaryReport(default_sample_list)
+    summary_df.append_headers()
 
     # Step 7: For loop that loads and processes individual experiments
     # Step 7a: Load HPLC data as a dataframe in the data_processor class.
@@ -192,6 +193,7 @@ def run_all_compounds():
                 processing_df_chunk.set_biosolid_masses(biosolid_dict)
                 processing_df_chunk.process_all_steps(concentration_dict)
                 processing_df_chunk.write_chunk_to_df(HPLC_df.df)
+                summary_df.summary_extraction(processing_df_chunk)
             except Exception as e:
                 print(f"❌ Error processing experiment {exps}: {e}")
                 import traceback
