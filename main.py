@@ -5,6 +5,7 @@ import pandas as pd
 #Import classes
 # import os
 import HPLC_file_loader
+import biomasses
 import conc_file_loader
 import conc_lib
 import data_processor
@@ -136,7 +137,7 @@ def run_all_compounds():
     # Step 5: Load biosolid_dict
     biosolid_mass_sheet_name = "Biosolid mass"
     biosolid_df = HPLC_file_loader.HPLCFileLoader(f"output/{output_filename}.xlsx", sheet_name=f"{biosolid_mass_sheet_name}")
-    print(biosolid_df.df)
+    biomass_data = biomasses.Biomasses(biosolid_df.df)
 
     # biosolid_dict = {
     #     "SS1": 1.0846,
