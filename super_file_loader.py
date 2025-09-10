@@ -3,6 +3,10 @@ import os
 
 class SuperFileLoader:
     def __init__(self, file_path, sheet_name=None):
+        self.df = None
+        self.num_rows = None
+        self.num_cols = None
+
         ext = os.path.splitext(file_path)[1].lower()
 
         if ext == ".csv":
