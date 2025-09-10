@@ -3,7 +3,7 @@ import shutil
 import pandas as pd
 
 #Import classes
-# import os
+import os
 import HPLC_file_loader
 import biomasses
 import conc_file_loader
@@ -138,6 +138,7 @@ def run_all_compounds():
     biosolid_mass_sheet_name = "Biosolid mass"
     biosolid_df = HPLC_file_loader.HPLCFileLoader(f"output/{output_filename}.xlsx", sheet_name=f"{biosolid_mass_sheet_name}")
     biomass_data = biomasses.Biomasses(biosolid_df.df)
+    biosolid_dict = biomass_data.biomass_dict
 
     # biosolid_dict = {
     #     "SS1": 1.0846,
@@ -182,6 +183,11 @@ def run_all_compounds():
     # } #Hard coded. User to input this per sheet
 
     # Step 6: Create summary dataframe
+    default_sample_list = biomass_data.sample_list_header
+    summary_df = SummaryReport(default_sample_list)
+    summary_df.append_headers()
+    print(default_sample_list)
+
     # default_sample_list = ["Analytes", "K4-1", "K4-2", "K4-4", "K4-5", "K3-1", "K3-2", "K3-3", "K3-4", "K3-6"] ##Hard coded. User to input this. Else loop for this default
     # summary_df = SummaryReport(default_sample_list)
     # summary_df.append_headers()
@@ -190,28 +196,28 @@ def run_all_compounds():
     # Step 7a: Load HPLC data as a dataframe in the data_processor class.
     # Step 7b: Process dataframe of specific compound.
     # Step 7c: Add dataframe to main HPLC_df dataframe.
-    # for exps in range(1, last_exp_num):
-    #     df_chunk = HPLC_df.extract_df(exps)
-    #     processing_df_chunk = data_processor.DataProcessor(df_chunk)  # convert to data_processor object
-    #
-    #     if processing_df_chunk.is_exp():
-    #         try:
-    #             processing_df_chunk.set_biosolid_masses(biosolid_dict)
-    #             processing_df_chunk.process_all_steps(concentration_dict)
-    #             processing_df_chunk.write_chunk_to_df(HPLC_df.df)
-    #             summary_df.summary_extraction(processing_df_chunk)
-    #         except Exception as e:
-    #             print(f"❌ Error processing experiment {exps}: {e}")
-    #             import traceback
-    #             traceback.print_exc()
+    for exps in range(1, last_exp_num):
+        df_chunk = HPLC_df.extract_df(exps)
+        processing_df_chunk = data_processor.DataProcessor(df_chunk)  # convert to data_processor object
+
+        if processing_df_chunk.is_exp():
+            try:
+                processing_df_chunk.set_biosolid_masses(biosolid_dict)
+                processing_df_chunk.process_all_steps(concentration_dict)
+                processing_df_chunk.write_chunk_to_df(HPLC_df.df)
+                summary_df.summary_extraction(processing_df_chunk)
+            except Exception as e:
+                print(f"❌ Error processing experiment {exps}: {e}")
+                import traceback
+                traceback.print_exc()
 
     # Step 8: Write HPLC_df.df dataframe to .xlsx file
-    # file_writer.FileWriter.write_df_to_excel(HPLC_df.df, "output/input_processed.xlsx", "PFAS Kitcholm soils 3,4", 0, 0)
+    file_writer.FileWriter.write_df_to_excel(HPLC_df.df, "output/input_processed.xlsx", "PFAS Kitcholm soils 3,4", 0, 0)
 
     # Step 9: Write summary dataframe to .csv file
-    # summary_df_pd_format = summary_df.to_dataframe()
-    # os.makedirs("output", exist_ok=True)
-    # file_writer.FileWriter.write_df_to_excel(summary_df_pd_format, "output/summary.xlsx", "Summary", 0, 0)
+    summary_df_pd_format = summary_df.to_dataframe()
+    os.makedirs("output", exist_ok=True) # NOT REQUIRED!!
+    file_writer.FileWriter.write_df_to_excel(summary_df_pd_format, "output/summary.xlsx", "Summary", 0, 0)
 
 if __name__ == '__main__':
     # run_single_compound(3)

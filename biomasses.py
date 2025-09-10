@@ -12,9 +12,7 @@ class Biomasses:
         self.row_size, self.col_size = self.input_df.shape
         self.biomass_dict = self.extract_biomass_dict()
         self.sample_list = self.extract_sample_list()
-
-        print(self.biomass_dict)
-        print(self.sample_list)
+        self.sample_list_header = ["Analytes"] + self.sample_list
 
     def extract_biomass_dict(self):
         biomass_dict = {}
@@ -27,7 +25,6 @@ class Biomasses:
         for row in range(self.row_size):
             sample_name = self.input_df.iloc[row, 0]
             sample_name_prefix = sample_name[:-1]
-            print(sample_name_prefix)
             if sample_name_prefix not in sample_list and not sample_name_prefix.startswith("SS"):
                 sample_list.append(sample_name_prefix)
         return sample_list
