@@ -47,7 +47,8 @@ class HPLCFileLoader(SuperFileLoader):
         (title_row , title_col) = self.exp_start_cell(exp_num)
         row_min = title_row
         row_max = row_min + 3
-        while not pd.isna(self.df.iloc[row_max, 0]):
+        # while not pd.isna(self.df.iloc[row_max, 0]):
+        while row_max < self.num_rows and not pd.isna(self.df.iat[row_max, 0]):
             row_max += 1
         return (row_min, row_max-1)
 

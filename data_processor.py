@@ -32,11 +32,11 @@ class DataProcessor:
         self.conc_vial_calc()
         self.corr_conc_calc()
         self.conc_soil_calc()
-        self.average_calc()
-        self.SD_calc()
-        self.format_combined_col()
-        self.perc_recovery_uncertainty_combined()
-        self.LOD_LOQ_calc()
+        # self.average_calc() ##!!!!!!!!BUG IN THIS METHOD CHECK IT!!!!
+        # self.SD_calc()
+        # self.format_combined_col()
+        # self.perc_recovery_uncertainty_combined()
+        # self.LOD_LOQ_calc()
 
     def is_exp(self):
         return pd.notna(self.df.iloc[3, 3])
