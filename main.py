@@ -204,20 +204,21 @@ def run_all_compounds():
             try:
                 processing_df_chunk.set_biosolid_masses(biosolid_dict)
                 processing_df_chunk.process_all_steps(concentration_dict)
-                processing_df_chunk.write_chunk_to_df(HPLC_df.df)
-                summary_df.summary_extraction(processing_df_chunk)
+                print(processing_df_chunk)
+                # processing_df_chunk.write_chunk_to_df(HPLC_df.df)
+                # summary_df.summary_extraction(processing_df_chunk)
             except Exception as e:
                 print(f"❌ Error processing experiment {exps}: {e}")
                 import traceback
                 traceback.print_exc()
 
     # Step 8: Write HPLC_df.df dataframe to .xlsx file
-    file_writer.FileWriter.write_df_to_excel(HPLC_df.df, "output/input_processed.xlsx", "PFAS Kitcholm soils 3,4", 0, 0)
+    # file_writer.FileWriter.write_df_to_excel(HPLC_df.df, "output/input_processed.xlsx", "PFAS Kitcholm soils 3,4", 0, 0)
 
     # Step 9: Write summary dataframe to .csv file
-    summary_df_pd_format = summary_df.to_dataframe()
-    os.makedirs("output", exist_ok=True) # NOT REQUIRED!!
-    file_writer.FileWriter.write_df_to_excel(summary_df_pd_format, "output/summary.xlsx", "Summary", 0, 0)
+    # summary_df_pd_format = summary_df.to_dataframe()
+    # os.makedirs("output", exist_ok=True) # NOT REQUIRED!!
+    # file_writer.FileWriter.write_df_to_excel(summary_df_pd_format, "output/summary.xlsx", "Summary", 0, 0)
 
 if __name__ == '__main__':
     # run_single_compound(3)
