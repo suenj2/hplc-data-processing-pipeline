@@ -32,7 +32,7 @@ class DataProcessor:
         self.conc_vial_calc()
         self.corr_conc_calc()
         self.conc_soil_calc()
-        self.average_calc() ##!!!!!!!!BUG IN THIS METHOD CHECK IT!!!!
+        self.average_calc()
         # self.SD_calc()
         # self.format_combined_col()
         # self.perc_recovery_uncertainty_combined()
@@ -321,11 +321,14 @@ class DataProcessor:
                 extract_triple_df = self.df.iloc[row:row+3, conc_col]
                 self.extract_mean_from_df(extract_triple_df)
                 mean, trials = self.extract_mean_from_df(extract_triple_df)
-                print(f"mean is {mean}")
-                print(f"{trials} trials")
+                self.df.iloc[row-1, avg_col] = "Average"
+                self.df.iloc[row, avg_col] = mean
+                self.df.iloc[row, avg_col+2] = trials
                 row += 3
             else:
                 row += 1
+
+
 
     def SD_calc(self):
         sample_col = 1
