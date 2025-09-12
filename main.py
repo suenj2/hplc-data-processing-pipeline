@@ -208,7 +208,7 @@ def run_all_compounds():
                 # processing_df_chunk.write_chunk_to_df(HPLC_df.df)
                 # summary_df.summary_extraction(processing_df_chunk)
             except Exception as e:
-                print(f"❌ Error processing experiment {exps}: {e}")
+                print(f"❌ Error processing experiment {exp}: {e}")
                 import traceback
                 traceback.print_exc()
 

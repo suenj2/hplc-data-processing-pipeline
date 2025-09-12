@@ -1,5 +1,4 @@
-Install panda
-
+In console:
 pip install openpyxl
 
-python -m pip install openpyxl
+Install pandas library

@@ -32,7 +32,7 @@ class DataProcessor:
         self.conc_vial_calc()
         self.corr_conc_calc()
         self.conc_soil_calc()
-        # self.average_calc() ##!!!!!!!!BUG IN THIS METHOD CHECK IT!!!!
+        self.average_calc() ##!!!!!!!!BUG IN THIS METHOD CHECK IT!!!!
         # self.SD_calc()
         # self.format_combined_col()
         # self.perc_recovery_uncertainty_combined()
@@ -260,41 +260,72 @@ class DataProcessor:
     #         if pd.notna(self.df.iloc[row, 12]) and isinstance(self.df.iloc[row, 12], (int, float)):
     #             self.df.iloc[row-1, 13] = "Combined"
     #             self.df.iloc[row, 13] = f"{self.df.iloc[row, 10]:.1f} ± {self.df.iloc[row, 11]:.1f}"
+    #
+    # def _get_triplet_base(self, r, sample_col):
+    #     """Return base name if rows r..r+2 are exactly baseA/baseB/baseC."""
+    #     try:
+    #         a = self.df.iloc[r, sample_col]
+    #         b = self.df.iloc[r + 1, sample_col]
+    #         c = self.df.iloc[r + 2, sample_col]
+    #     except IndexError:
+    #         return None
+    #     if not (isinstance(a, str) and isinstance(b, str) and isinstance(c, str)):
+    #         return None
+    #     if not (a.endswith("A") and b.endswith("B") and c.endswith("C")):
+    #         return None
+    #     base = a[:-1]
+    #     if b[:-1] != base or c[:-1] != base:
+    #         return None
+    #     return base
+    #
+    # def average_calc(self):
+    #     sample_col = 1
+    #     conc_col = 10
+    #     avg_col = 11
+    #
+    #     r = self.row_first_run
+    #     while r < self.row_size:
+    #         base = self._get_triplet_base(r, sample_col) if hasattr(self, "_is_triplet") else self._get_triplet_base(self, r, sample_col)
+    #         if base:
+    #             vals = self.df.iloc[r:r + 3, conc_col].astype(float)
+    #             if vals.notna().all():
+    #                 # headers one row above A row; value on A row
+    #                 self.df.iloc[r - 1, avg_col] = "Average"
+    #                 self.df.iloc[r, avg_col] = float(vals.mean())
+    #             r += 3  # jump to next block
+    #         else:
+    #             r += 1
 
-    def _get_triplet_base(self, r, sample_col):
-        """Return base name if rows r..r+2 are exactly baseA/baseB/baseC."""
-        try:
-            a = self.df.iloc[r, sample_col]
-            b = self.df.iloc[r + 1, sample_col]
-            c = self.df.iloc[r + 2, sample_col]
-        except IndexError:
-            return None
-        if not (isinstance(a, str) and isinstance(b, str) and isinstance(c, str)):
-            return None
-        if not (a.endswith("A") and b.endswith("B") and c.endswith("C")):
-            return None
-        base = a[:-1]
-        if b[:-1] != base or c[:-1] != base:
-            return None
-        return base
+    def extract_mean_from_df(self, df):
+        sum = 0
+        trials = 0
+        for row in range(df.shape[0]):
+            if pd.notna(df.iloc[row]):
+                sum += df.iloc[row]
+                trials += 1
+        if trials != 0:
+            mean = sum/trials
+        else:
+            mean = 0
+        return (mean, trials)
 
     def average_calc(self):
         sample_col = 1
         conc_col = 10
         avg_col = 11
+        row = self.row_first_run
 
-        r = self.row_first_run
-        while r < self.row_size:
-            base = self._get_triplet_base(r, sample_col) if hasattr(self, "_is_triplet") else self._get_triplet_base(self, r, sample_col)
-            if base:
-                vals = self.df.iloc[r:r + 3, conc_col].astype(float)
-                if vals.notna().all():
-                    # headers one row above A row; value on A row
-                    self.df.iloc[r - 1, avg_col] = "Average"
-                    self.df.iloc[r, avg_col] = float(vals.mean())
-                r += 3  # jump to next block
+        while row < self.row_size:
+            cell = self.df.iloc[row, sample_col]
+            if pd.notna(cell) and cell != "MeOH":
+                extract_triple_df = self.df.iloc[row:row+3, conc_col]
+                self.extract_mean_from_df(extract_triple_df)
+                mean, trials = self.extract_mean_from_df(extract_triple_df)
+                print(f"mean is {mean}")
+                print(f"{trials} trials")
+                row += 3
             else:
-                r += 1
+                row += 1
 
     def SD_calc(self):
         sample_col = 1
