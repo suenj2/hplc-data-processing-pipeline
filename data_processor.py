@@ -319,7 +319,6 @@ class DataProcessor:
             cell = self.df.iloc[row, sample_col]
             if pd.notna(cell) and cell != "MeOH":
                 extract_triple_df = self.df.iloc[row:row+3, conc_col]
-                self.extract_mean_from_df(extract_triple_df)
                 mean, trials = self.extract_mean_from_df(extract_triple_df)
                 self.df.iloc[row-1, avg_col] = "Average"
                 self.df.iloc[row, avg_col] = mean
@@ -327,8 +326,6 @@ class DataProcessor:
                 row += 3
             else:
                 row += 1
-
-
 
     def SD_calc(self):
         sample_col = 1
