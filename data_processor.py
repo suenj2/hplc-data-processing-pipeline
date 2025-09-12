@@ -327,6 +327,13 @@ class DataProcessor:
             else:
                 row += 1
 
+    def extract_SD_from_df(self, df):
+        list = []
+        for row in range(df.shape[0]):
+            if pd.notna(df.iloc[row]):
+                list.append(df.iloc[row])
+        return stats.stdev(list)
+
     def SD_calc(self):
         sample_col = 1
         conc_col = 10
