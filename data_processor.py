@@ -1,3 +1,5 @@
+from numpy.ma.extras import average
+
 import HPLC_file_loader
 import pandas as pd
 import numpy as np
@@ -34,7 +36,7 @@ class DataProcessor:
         self.conc_soil_calc()
         self.average_calc()
         self.SD_calc()
-        # self.format_combined_col()
+        self.format_combined_col()
         # self.perc_recovery_uncertainty_combined()
         # self.LOD_LOQ_calc()
 
@@ -289,23 +291,24 @@ class DataProcessor:
                 row += 1
 
     def format_combined_col(self):
-        sample_col = 1
         avg_col = 11
         sd_col = 12
+        trials_col = 13
         comb_col = 13
 
-        r = self.row_first_run
-        while r < self.row_size:
-            base = self._get_triplet_base(r, sample_col) if hasattr(self, "_is_triplet") else self._get_triplet_base(self, r, sample_col)
-            if base:
-                avg = self.df.iloc[r, avg_col]
-                sd = self.df.iloc[r, sd_col]
-                if pd.notna(avg) and pd.notna(sd):
-                    self.df.iloc[r - 1, comb_col] = "Combined"
-                    self.df.iloc[r, comb_col] = f"{float(avg):.1f} ± {float(sd):.1f}"
-                r += 3
-            else:
-                r += 1
+        for row in range(self.row_first_run, self.row_size):
+            average = self.df.iloc[row, avg_col]
+            stdev = self.df.iloc[row, sd_col]
+            trials = self.df.iloc[row, trials_col]
+
+            if pd.notna(self.df.iloc[row, avg_col]) and self.df.iloc[row-1, avg_col] == "Average":
+                self.df.iloc[row-1, comb_col] = "Combined"
+                if trials == 3:
+                    self.df.iloc[row, comb_col] = f"{average} ± {stdev}"
+                elif trials == 2:
+                    self.df.iloc[row, comb_col] = f"{average} ± {stdev}†"
+                elif trials == 1:
+                    self.df.iloc[row, comb_col] = f"{average}††"
 
     def perc_recovery_uncertainty_combined(self):
         self.df.iloc[15, 13] = "%Recovery"
