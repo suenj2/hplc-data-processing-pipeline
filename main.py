@@ -204,7 +204,6 @@ def run_all_compounds():
             try:
                 processing_df_chunk.set_biosolid_masses(biosolid_dict)
                 processing_df_chunk.process_all_steps(concentration_dict)
-                print(processing_df_chunk)
                 # processing_df_chunk.write_chunk_to_df(HPLC_df.df)
                 # summary_df.summary_extraction(processing_df_chunk)
             except Exception as e:
