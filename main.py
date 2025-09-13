@@ -114,7 +114,7 @@ def run_all_compounds():
     # Step 1: Make secure copy in output folder
     input_HPLC_filename = "input"  # hardcoded for now
     output_filename = filename_output(input_HPLC_filename)
-    file_copy(f"input/{input_HPLC_filename}.xlsx", f"output/{output_filename}.xlsx")
+    # file_copy(f"input/{input_HPLC_filename}.xlsx", f"output/{output_filename}.xlsx") #REENABLE AFTER COMPLETING CODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!##################################
 
     # Step 2: Open and extract dataframe from HPLC file (.xlsx) in output folder
     HPLC_sheet_name = "PFAS Kitcholm soils 3,4"  # hardcoded for now

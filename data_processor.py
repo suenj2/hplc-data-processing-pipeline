@@ -33,7 +33,7 @@ class DataProcessor:
         self.corr_conc_calc()
         self.conc_soil_calc()
         self.average_calc()
-        # self.SD_calc()
+        self.SD_calc()
         # self.format_combined_col()
         # self.perc_recovery_uncertainty_combined()
         # self.LOD_LOQ_calc()
@@ -328,28 +328,49 @@ class DataProcessor:
                 row += 1
 
     def extract_SD_from_df(self, df):
-        list = []
+        trials = 0
         for row in range(df.shape[0]):
             if pd.notna(df.iloc[row]):
-                list.append(df.iloc[row])
-        return stats.stdev(list)
+                trials += 1
+        if trials < 2:
+            return -1
+        else:
+            return df.dropna().std(ddof=1)
 
     def SD_calc(self):
         sample_col = 1
         conc_col = 10
         sd_col = 12
+        row = self.row_first_run
 
-        r = self.row_first_run
-        while r < self.row_size:
-            base = self._get_triplet_base(r, sample_col) if hasattr(self, "_is_triplet") else self._get_triplet_base(self, r, sample_col)
-            if base:
-                vals = self.df.iloc[r:r + 3, conc_col].astype(float)
-                if vals.notna().all():
-                    self.df.iloc[r - 1, sd_col] = "Stdev"
-                    self.df.iloc[r, sd_col] = float(vals.std(ddof=1))
-                r += 3
+        while row < self.row_size:
+            cell = self.df.iloc[row, sample_col]
+            if pd.notna(cell) and cell != "MeOH":
+                extract_triple_df = self.df.iloc[row:row+3, conc_col]
+                self.extract_SD_from_df(extract_triple_df)
+                sd = self.extract_SD_from_df(extract_triple_df)
+                self.df.iloc[row-1, sd_col] = "Stdev"
+                self.df.iloc[row, sd_col] = sd
+                row += 3
             else:
-                r += 1
+                row += 1
+
+    # def SD_calc(self):
+    #     sample_col = 1
+    #     conc_col = 10
+    #     sd_col = 12
+    #
+    #     r = self.row_first_run
+    #     while r < self.row_size:
+    #         base = self._get_triplet_base(r, sample_col) if hasattr(self, "_is_triplet") else self._get_triplet_base(self, r, sample_col)
+    #         if base:
+    #             vals = self.df.iloc[r:r + 3, conc_col].astype(float)
+    #             if vals.notna().all():
+    #                 self.df.iloc[r - 1, sd_col] = "Stdev"
+    #                 self.df.iloc[r, sd_col] = float(vals.std(ddof=1))
+    #             r += 3
+    #         else:
+    #             r += 1
 
     def format_combined_col(self):
         sample_col = 1
