@@ -304,11 +304,11 @@ class DataProcessor:
             if pd.notna(self.df.iloc[row, avg_col]) and self.df.iloc[row-1, avg_col] == "Average":
                 self.df.iloc[row-1, comb_col] = "Combined"
                 if trials == 3:
-                    self.df.iloc[row, comb_col] = f"{average} ± {stdev}"
+                    self.df.iloc[row, comb_col] = f"{average:.1f} ± {stdev:.1f}"
                 elif trials == 2:
-                    self.df.iloc[row, comb_col] = f"{average} ± {stdev}†"
+                    self.df.iloc[row, comb_col] = f"{average:.1f} ± {stdev:.1f}†"
                 elif trials == 1:
-                    self.df.iloc[row, comb_col] = f"{average}††"
+                    self.df.iloc[row, comb_col] = f"{average:.1f}††"
 
     def perc_recovery_uncertainty_combined(self):
         self.df.iloc[15, 13] = "%Recovery"
