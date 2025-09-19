@@ -5,6 +5,10 @@ import pandas as pd
 import numpy as np
 import scipy.stats as stats
 
+#Pandas settings
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+
 class DataProcessor:
     def __init__(self, df_chunk):
         self.df = df_chunk
@@ -27,18 +31,18 @@ class DataProcessor:
 
     def process_all_steps(self, concentration_dict):
         self.pre_format()
-        self.append_std_conc_and_spike(concentration_dict)
-        self.append_biosolid_masses()
-        self.ratio_calc()
-        self.linest()
-        self.conc_vial_calc()
-        self.corr_conc_calc()
-        self.conc_soil_calc()
-        self.average_calc()
-        self.SD_calc()
-        self.format_combined_col()
-        self.perc_recovery_uncertainty_combined()
-        self.LOD_LOQ_calc()
+        # self.append_std_conc_and_spike(concentration_dict)
+        # self.append_biosolid_masses()
+        # self.ratio_calc()
+        # self.linest()
+        # self.conc_vial_calc()
+        # self.corr_conc_calc()
+        # self.conc_soil_calc()
+        # self.average_calc()
+        # self.SD_calc()
+        # self.format_combined_col()
+        # self.perc_recovery_uncertainty_combined()
+        # self.LOD_LOQ_calc()
 
     def is_exp(self):
         return pd.notna(self.df.iloc[3, 3])
@@ -119,9 +123,15 @@ class DataProcessor:
             row += 1
 
     def pre_format(self):
+        # Expand dataframe to 18 cols
+        if self.df.shape[1] < 18:
+            self.df = self.df.reindex(columns=range(18))
+            self.col_size = self.df.shape[1] #update attribute
+
         for rows in range(self.row_size):
             for cols in range(7, self.col_size):
                 self.df.iloc[rows, cols] = np.nan
+                # self.df.iloc[rows, cols] = 0
 
         self.df.iloc[2, 7] = "ratio"
 
@@ -359,9 +369,22 @@ class DataProcessor:
         self.df.iloc[3, 11] = LOD
         self.df.iloc[4, 11] = LOQ
 
+    # def write_chunk_to_df(self, main_df):
+    #     start_row, start_col = self.starting_coordinate
+    #     main_df.iloc[start_row:start_row + self.row_size, start_col:start_col + self.col_size] = self.df.values
+
     def write_chunk_to_df(self, main_df):
-        start_row, start_col = self.starting_coordinate
-        main_df.iloc[start_row:start_row + self.row_size, start_col:start_col + self.col_size] = self.df.values
+        start_row, start_col = self.starting_coordinate #top left anchor in the master dataframe
+        rows, cols = self.df.shape
+
+        # This block ensures the master dataframe has cols matching appending dataframe at minimum
+        cols_requested = start_col + cols  # exclusive end index
+        if main_df.shape[1] < cols_requested:
+            for j in range(main_df.shape[1], cols_requested):
+                main_df[j] = np.nan
+
+        # Append the dataframe to the master dataframe
+        main_df.iloc[start_row:start_row + rows, start_col:start_col + cols] = self.df.values
 
 # Older function versions:
     # def average_calc(self):
