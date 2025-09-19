@@ -32,8 +32,8 @@ class DataProcessor:
     def process_all_steps(self, concentration_dict):
         self.pre_format()
         self.append_std_conc_and_spike(concentration_dict)
-        # self.append_biosolid_masses()
-        # self.ratio_calc()
+        self.append_biosolid_masses()
+        self.ratio_calc()
         # self.linest()
         # self.conc_vial_calc()
         # self.corr_conc_calc()
@@ -117,10 +117,12 @@ class DataProcessor:
         self.biosolid_masses_dict = biosolid_dict
 
     def append_biosolid_masses(self):
-        self.df.iloc[1, 16] = "Biosolids Masses"
-        self.df.iloc[1, 17] = "(g)"
+        title_row = 1
 
-        row = 3
+        self.df.iloc[title_row, 16] = "Biosolids Masses"
+        self.df.iloc[title_row, 17] = "(g)"
+
+        row = title_row + 1
         for sample_id, mass in self.biosolid_masses_dict.items():
             self.df.iloc[row, 16] = sample_id
             self.df.iloc[row, 17] = mass
@@ -385,7 +387,7 @@ class DataProcessor:
         cols_requested = start_col + cols  # exclusive end index
         if main_df.shape[1] < cols_requested:
             for j in range(main_df.shape[1], cols_requested):
-                main_df[j] = np.nan
+                main_df[j] = pd.Series([pd.NA] * len(main_df), dtype="object")
 
         # Append the dataframe to the master dataframe
         main_df.iloc[start_row:start_row + rows, start_col:start_col + cols] = self.df.values
