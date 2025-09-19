@@ -11,7 +11,7 @@ pd.set_option('display.max_columns', None)
 
 class DataProcessor:
     def __init__(self, df_chunk):
-        self.df = df_chunk
+        self.df = df_chunk.astype("object")
         self.exp_num, self.compound_name = self.find_exp_attributes()
         self.starting_coordinate = (df_chunk.index.min(), int(df_chunk.columns.min()))
         self.row_size, self.col_size = df_chunk.shape
@@ -131,7 +131,7 @@ class DataProcessor:
     def pre_format(self):
         # Expand dataframe to 18 cols
         if self.df.shape[1] < 18:
-            self.df = self.df.reindex(columns=range(18))
+            self.df = self.df.reindex(columns=range(18)).astype("object")
             self.col_size = self.df.shape[1] #update attribute
 
         for rows in range(self.row_size):
@@ -387,7 +387,7 @@ class DataProcessor:
         cols_requested = start_col + cols  # exclusive end index
         if main_df.shape[1] < cols_requested:
             for j in range(main_df.shape[1], cols_requested):
-                main_df[j] = pd.Series([pd.NA] * len(main_df), dtype="object")
+                main_df[j] = pd.Series([np.nan] * len(main_df), dtype="object")
 
         # Append the dataframe to the master dataframe
         main_df.iloc[start_row:start_row + rows, start_col:start_col + cols] = self.df.values

@@ -10,13 +10,13 @@ class SuperFileLoader:
         ext = os.path.splitext(file_path)[1].lower()
 
         if ext == ".csv":
-            self.df = pd.read_csv(file_path, header=None)
+            self.df = pd.read_csv(file_path, header=None, dtype=object)
         # elif ext in (".xls", ".xlsx"):
         #     self.df = pd.read_excel(file_path, sheet_name=sheet_name, header=None)
         elif ext in (".xls", ".xlsx"):
             if sheet_name is None:
                 sheet_name = 0 #Load first sheet by default
-            self.df = pd.read_excel(file_path, sheet_name=sheet_name, header=None)
+            self.df = pd.read_excel(file_path, sheet_name=sheet_name, header=None, dtype=object)
         else:
             raise ValueError(f"Unsupported file type: {ext}")
 
