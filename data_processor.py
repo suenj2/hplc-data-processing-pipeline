@@ -31,7 +31,7 @@ class DataProcessor:
 
     def process_all_steps(self, concentration_dict):
         self.pre_format()
-        # self.append_std_conc_and_spike(concentration_dict)
+        self.append_std_conc_and_spike(concentration_dict)
         # self.append_biosolid_masses()
         # self.ratio_calc()
         # self.linest()
@@ -85,25 +85,29 @@ class DataProcessor:
         return exp_num, compound_name
 
     def append_std_conc_and_spike(self, dict):
+        # extract concentrations from the concentration library
         exp_num, compound_name = self.find_exp_attributes()
-        sub_conc_df = dict[compound_name]
+        sub_conc_df = dict[compound_name] #concentrations recovered from dictionary
         row_end_conc = 0
-
         for row in range(sub_conc_df.shape[0]):
             if not pd.isna(sub_conc_df.iloc[row, 0]):
                 row_end_conc += 1
             else:
                 break
 
+        # append the concentrations and spike to dataframe
         sub_df_concs = sub_conc_df.iloc[:row_end_conc, :]
         spike_value = float(sub_conc_df.iloc[-1, 0])
 
-        start_row, start_col = 3, 2  # origin cell for insertion
+        for row in range(self.row_size):
+            if self.df.iloc[row, 1] == "EPA1633 & diPAPs Calibration 0 ppb":
+                # print(self.df.iloc[row, 1])
+                start_row = row
+                start_col = 2
+                end_row = start_row + sub_df_concs.shape[0]
+                end_col = start_col + sub_df_concs.shape[1]
+                self.df.iloc[start_row:end_row, start_col:end_col] = sub_df_concs.values
 
-        end_row = start_row + sub_df_concs.shape[0]
-        end_col = start_col + sub_df_concs.shape[1]
-
-        self.df.iloc[start_row:end_row, start_col:end_col] = sub_df_concs.values
         self.df.iloc[9, 9] = "Spike"
         self.df.iloc[10, 9] = spike_value
 
