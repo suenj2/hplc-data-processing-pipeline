@@ -148,7 +148,7 @@ class DataProcessor:
                 self.df.iloc[row, 7] = result
 
     def linest(self):
-        x = np.array(self.df.iloc[6:10, 2].tolist(), dtype=float)
+        x = np.array(self.df.iloc[6:10, 2].tolist(), dtype=float) #row count starts from 0 in the experiment df (exp + 2)
         y = np.array(self.df.iloc[6:10, 7].tolist(), dtype=float)
         n = len(x)
 
@@ -261,6 +261,7 @@ class DataProcessor:
                     self.df.iloc[row, 10] = conc
                 # elif self.df.iloc[row, 1] ==  self.df.iloc[biosolid_row, 16]:
                 else: # would be better to write an elif here checking for either a complete match with biosolid masses or just the prefix
+                    # use self.biosolid_masses_dict
                     conc = (self.df.iloc[row, 9]/self.df.iloc[biosolid_row, 17]) * 1.1
                     self.df.iloc[row, 10] = conc
                     biosolid_row += 1
