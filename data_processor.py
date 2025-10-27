@@ -38,8 +38,8 @@ class DataProcessor:
         self.conc_vial_calc()
         self.corr_conc_calc()
         self.conc_soil_calc()
-        # self.average_calc()
-        # self.SD_calc()
+        self.average_calc()
+        self.SD_calc()
         # self.format_combined_col()
         # self.perc_recovery_uncertainty_combined()
         # self.LOD_LOQ_calc()
@@ -242,30 +242,21 @@ class DataProcessor:
     def conc_soil_calc(self):
         self.df.iloc[11, 10] = "Conc. In soil (ng/g)"
 
-        # for row in range(self.row_first_run, self.row_first_run+3):
-        #     if not pd.isna(self.df.iloc[row, 9]):
-        #         conc = self.df.iloc[row, 9] * 1.1
-        #         self.df.iloc[row, 10] = conc
-        #
-        biosolid_row = 3
-        # for row in range(self.row_first_run+3, self.row_size): #for loop range is correct calculations requires biosolid masses
-        #     if not pd.isna(self.df.iloc[row, 9]) and (self.df.iloc[row, 1] ==  self.df.iloc[biosolid_row, 16]):
-        #         conc = (self.df.iloc[row, 9]/self.df.iloc[biosolid_row, 17]) * 1.1
-        #         self.df.iloc[row, 10] = conc
-        #         biosolid_row += 1
-
         for row in range(self.row_first_run, self.row_size):
             if not pd.isna(self.df.iloc[row, 9]):
                 if self.df.iloc[row, 1].startswith("SB"):
                     conc = self.df.iloc[row, 9] * 1.1
                     self.df.iloc[row, 10] = conc
-                # elif self.df.iloc[row, 1] ==  self.df.iloc[biosolid_row, 16]:
-                else: # would be better to write an elif here checking for either a complete match with biosolid masses or just the prefix
-                    # use self.biosolid_masses_dict
-                    conc = (self.df.iloc[row, 9]/self.df.iloc[biosolid_row, 17]) * 1.1
+                elif self.df.iloc[row, 1].startswith("SS"):
+                    data_prefix = self.df.iloc[row, 1][:3]
+                    biosolid_mass = self.biosolid_masses_dict[data_prefix]
+                    conc = (self.df.iloc[row, 9]/biosolid_mass) * 1.1
                     self.df.iloc[row, 10] = conc
-                    biosolid_row += 1
-
+                elif self.df.iloc[row, 1] in self.biosolid_masses_dict:
+                    data_label = self.df.iloc[row, 1]
+                    biosolid_mass = self.biosolid_masses_dict[data_label]
+                    conc = (self.df.iloc[row, 9] / biosolid_mass) * 1.1
+                    self.df.iloc[row, 10] = conc
 
     def extract_mean_from_df(self, df):
         sum = 0
