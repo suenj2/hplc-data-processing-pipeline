@@ -226,7 +226,7 @@ def run_all_compounds_2():
     # file_copy(f"input/{input_HPLC_filename}.xlsx", f"output/{output_filename}.xlsx") ###REENABLE WHEN FUNCION IS READY!!!!
 
     # Step 2: Open and extract dataframe from HPLC file (.xlsx) in output folder
-    HPLC_sheet_name = "20250912_6sites_soil_1year_cal&"  # hardcoded for now
+    HPLC_sheet_name = "20251024_6sites_soil_1year_(red"  # hardcoded for now
     HPLC_df = HPLC_file_loader.HPLCFileLoader(f"output/{output_filename}.xlsx", sheet_name=f"{HPLC_sheet_name}")
     HPLC_df.read_file_meta_data()
     last_exp_num = HPLC_df.get_last_exp()
@@ -254,7 +254,7 @@ def run_all_compounds_2():
     default_sample_list = biomass_data.sample_list_header
     summary_df = SummaryReport(default_sample_list)
     summary_df.append_headers()
-    print(default_sample_list)
+    # print(default_sample_list)
 
     # Step 7: For loop that loads and processes individual experiments
     # Step 7a: Load HPLC data as a dataframe in the data_processor class.
@@ -268,14 +268,22 @@ def run_all_compounds_2():
             try:
                 processing_df_chunk.set_biosolid_masses(biosolid_dict)
                 processing_df_chunk.process_all_steps(concentration_dict)
-                # print(processing_df_chunk)
+                print(processing_df_chunk)
                 processing_df_chunk.write_chunk_to_df(HPLC_df.df)
-                print(HPLC_df.df)
+                # print(HPLC_df.df)
                 summary_df.summary_extraction(processing_df_chunk)
             except Exception as e:
                 print(f"❌ Error processing experiment {exp}: {e}")
                 import traceback
                 traceback.print_exc()
+
+    # # Step 8: Write HPLC_df.df dataframe to .xlsx file
+    # file_writer.FileWriter.write_df_to_excel(HPLC_df.df, "output/input_processed.xlsx", "PFAS Kitcholm soils 3,4", 0, 0)
+    #
+    # # Step 9: Write summary dataframe to .csv file
+    # summary_df_pd_format = summary_df.to_dataframe()
+    # os.makedirs("output", exist_ok=True) # NOT REQUIRED!!
+    # file_writer.FileWriter.write_df_to_excel(summary_df_pd_format, "output/summary.xlsx", "Summary", 0, 0)
 
 
 if __name__ == '__main__':
