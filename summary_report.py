@@ -17,7 +17,6 @@ class SummaryReport:
         return right_side
 
     def summary_extraction(self, processed_dataframe):
-        # exp_label = processed_dataframe.find_exp_attributes()[1]
         exp_title = str(processed_dataframe.df.iloc[0, 0])
         exp_label = self.find_exp_label(exp_title)
         print(exp_label)
@@ -36,7 +35,6 @@ class SummaryReport:
                     break  # stop scanning rows once match is found
             if not found:
                 row_extracted_data.append(np.nan)  # placeholder to keep dimensions square
-        # print(row_extracted_data)
         self.summary_dynamic_list.append(row_extracted_data)
         print(self.summary_dynamic_list)
 

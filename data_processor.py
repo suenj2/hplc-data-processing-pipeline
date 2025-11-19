@@ -1,5 +1,3 @@
-from numpy.ma.extras import average
-
 import HPLC_file_loader
 import pandas as pd
 import numpy as np
@@ -193,13 +191,6 @@ class DataProcessor:
             columns=["Col1 (slope)", "Col2 (intercept)"]
         )
 
-        # print statement for debugging the linest
-        # print("##################################################")
-        # print(f"x:{x}")
-        # print(f"y:{y}")
-        # print(linest_df)
-        # print("##################################################")
-
         # Append to self data frame
         self.df.iloc[1, 8] = "LINEST" #print title
         start_row, start_col = 2, 8  # origin cell for insertion
@@ -386,10 +377,6 @@ class DataProcessor:
         self.df.iloc[3, 11] = LOD
         self.df.iloc[4, 11] = LOQ
 
-    # def write_chunk_to_df(self, main_df):
-    #     start_row, start_col = self.starting_coordinate
-    #     main_df.iloc[start_row:start_row + self.row_size, start_col:start_col + self.col_size] = self.df.values
-
     def write_chunk_to_df(self, main_df):
         start_row, start_col = self.starting_coordinate #top left anchor in the master dataframe
         rows, cols = self.df.shape
@@ -402,99 +389,3 @@ class DataProcessor:
 
         # Append the dataframe to the master dataframe
         main_df.iloc[start_row:start_row + rows, start_col:start_col + cols] = self.df.values
-
-# Older function versions:
-    # def average_calc(self):
-    #     row_count = 0
-    #     total = 0
-    #     for row in range(self.row_first_run, self.row_size):
-    #         if not pd.isna(self.df.iloc[row, 10]) and row_count <= 2:
-    #             total += self.df.iloc[row, 10]
-    #             row_count += 1
-    #         if row_count == 3:
-    #             self.df.iloc[row-3, 11] = "Average"
-    #             self.df.iloc[row-2, 11] = total/row_count
-    #             row_count = 0
-    #             total = 0
-    #
-    # def SD_calc(self):
-    #     data = []
-    #     row_count = 0
-    #     for row in range(self.row_first_run, self.row_size):
-    #         if not pd.isna(self.df.iloc[row, 10]) and row_count <= 2:
-    #             data.append(self.df.iloc[row, 10])
-    #             row_count += 1
-    #         if row_count == 3:
-    #             self.df.iloc[row-3, 12] = "Stdev"
-    #             self.df.iloc[row-2, 12] = np.std(data, ddof=1)
-    #             row_count = 0
-    #             data = []
-    #
-    # def format_combined_col(self):
-    #     for row in range(self.row_first_run, self.row_size):
-    #         if pd.notna(self.df.iloc[row, 12]) and isinstance(self.df.iloc[row, 12], (int, float)):
-    #             self.df.iloc[row-1, 13] = "Combined"
-    #             self.df.iloc[row, 13] = f"{self.df.iloc[row, 10]:.1f} ± {self.df.iloc[row, 11]:.1f}"
-    #
-    # def _get_triplet_base(self, r, sample_col):
-    #     """Return base name if rows r..r+2 are exactly baseA/baseB/baseC."""
-    #     try:
-    #         a = self.df.iloc[r, sample_col]
-    #         b = self.df.iloc[r + 1, sample_col]
-    #         c = self.df.iloc[r + 2, sample_col]
-    #     except IndexError:
-    #         return None
-    #     if not (isinstance(a, str) and isinstance(b, str) and isinstance(c, str)):
-    #         return None
-    #     if not (a.endswith("A") and b.endswith("B") and c.endswith("C")):
-    #         return None
-    #     base = a[:-1]
-    #     if b[:-1] != base or c[:-1] != base:
-    #         return None
-    #     return base
-    #
-    # def average_calc(self):
-    #     sample_col = 1
-    #     conc_col = 10
-    #     avg_col = 11
-    #
-    #     r = self.row_first_run
-    #     while r < self.row_size:
-    #         base = self._get_triplet_base(r, sample_col) if hasattr(self, "_is_triplet") else self._get_triplet_base(self, r, sample_col)
-    #         if base:
-    #             vals = self.df.iloc[r:r + 3, conc_col].astype(float)
-    #             if vals.notna().all():
-    #                 # headers one row above A row; value on A row
-    #                 self.df.iloc[r - 1, avg_col] = "Average"
-    #                 self.df.iloc[r, avg_col] = float(vals.mean())
-    #             r += 3  # jump to next block
-    #         else:
-    #             r += 1
-    #
-    # def SD_calc(self):
-    #     sample_col = 1
-    #     conc_col = 10
-    #     sd_col = 12
-    #
-    #     r = self.row_first_run
-    #     while r < self.row_size:
-    #         base = self._get_triplet_base(r, sample_col) if hasattr(self, "_is_triplet") else self._get_triplet_base(self, r, sample_col)
-    #         if base:
-    #             vals = self.df.iloc[r:r + 3, conc_col].astype(float)
-    #             if vals.notna().all():
-    #                 self.df.iloc[r - 1, sd_col] = "Stdev"
-    #                 self.df.iloc[r, sd_col] = float(vals.std(ddof=1))
-    #             r += 3
-    #         else:
-    #             r += 1
-
-
-
-
-# Test:
-# print(DataProcessor.find_exp_attributes("Compound 4:  PFEtS"))
-# print(DataProcessor.find_exp_attributes("Compound 4:  PFEtS 11"))
-# print(DataProcessor.find_exp_attributes("Compound 9:  3:3 FTCA 12"))
-# print(DataProcessor.find_exp_attributes("Compound 99: TFA 100"))
-
-

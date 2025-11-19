@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-# from scipy.ndimage import extrema
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)

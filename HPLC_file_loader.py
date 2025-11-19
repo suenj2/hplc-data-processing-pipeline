@@ -56,15 +56,3 @@ class HPLCFileLoader(SuperFileLoader):
         (row_min, row_max) = self.exp_row_range(exp_num)
         df_chunk_extracted = self.df.iloc[row_min:row_max+1, 0:18]
         return df_chunk_extracted
-
-
-# reader = HPLCFileLoader("input/input.xlsx", sheet_name="PFAS Kitcholm soils 3,4")
-# HPLCFileLoader.read_file_meta_data(reader)
-# FileReader.list_exps(reader)
-# FileReader.exp_start_cell(reader, 1)
-# FileReader.exp_start_cell(reader, 133)
-# print(FileReader.exp_start_cell(reader, 1))
-# print(FileReader.exp_row_range(reader, 1)) #should be (7,54)
-# print(FileReader.extract_df(reader, 1))
-
-# Will also need a global var for these
