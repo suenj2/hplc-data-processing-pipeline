@@ -44,6 +44,3 @@ python main.py
 
 Files added
 - `requirements.txt` - minimal dependencies
-
-Notes
-- The featurizer will fall back to a lightweight SMILES-based featurizer if RDKit is not installed. For production or chemistry-focused work, install RDKit through conda to get full descriptors.
